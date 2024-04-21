@@ -19,6 +19,11 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Install - Build
+        run: |
+          pnpm i
+          pnpm build
+
       - name: Lint
         # Only fail if it is not possible to fix the linting errors
         run: pnpm lint:fix
