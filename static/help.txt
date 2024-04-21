@@ -1,0 +1,12 @@
+Usage: perf runner [options] [test-methods...]
+
+Run performance tests.
+
+Arguments:
+  test-methods             list of test methods to run (choices: "search",
+                           "anonymous", "map", "all", default: ["all"])
+
+Options:
+  -t, --timeout <timeout>  timeout for each test (default: 1000)
+  -V, --version            output the version number
+  -h, --help               display help for command

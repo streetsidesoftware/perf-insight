@@ -1,0 +1,36 @@
+$schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json
+version: '0.2'
+ignorePaths:
+  - .git/{FETCH_HEAD,HEAD,index,packed-refs,config}
+  - .git/*/*/**
+  - .gitattributes
+  - .gitignore
+  - .prettierignore
+  - .vscode
+  - '*-lock.*'
+  - '*.lock'
+  - '*.sample'
+  - /coverage
+  - /dist
+  - CHANGELOG.md
+  - cspell.config.*
+  - node_modules
+  - '*.tsv'
+  - ngram/**/*.json
+enableGlobDot: true
+useGitignore: true
+dictionaryDefinitions: []
+dictionaries: []
+words:
+  - autobuild
+  - buildscript
+  - codecov
+  - codeql
+  - coverallsapp
+  - lcov
+  - ngram
+  - pnpm
+  - Positionals
+  - vitest
+ignoreWords: []
+import: []

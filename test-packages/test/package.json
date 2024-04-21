@@ -1,0 +1,35 @@
+{
+  "name": "test-perf-bench",
+  "version": "1.0.0",
+  "description": "Example perf tests.",
+  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@8.15.7",
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "perf-bench": "./bin.mjs"
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "watch": "tsc -p . --watch",
+    "test": "perf-bench trie --suite search",
+    "prepare": "pnpm build"
+  },
+  "author": {
+    "name": "Street Side Software",
+    "url": "https://github.com/streetsidesoftware"
+  },
+  "bugs": {
+    "url": "https://github.com/streetsidesoftware/template-typescript-cli-app/issues"
+  },
+  "homepage": "https://github.com/streetsidesoftware/template-typescript-cli-app#readme",
+  "license": "MIT",
+  "dependencies": {
+    "cspell-trie-lib": "^8.7.0",
+    "lorem-ipsum": "^2.0.8",
+    "perf-bench": "workspace:*"
+  },
+  "files": []
+}

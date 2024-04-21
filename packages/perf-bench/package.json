@@ -1,0 +1,65 @@
+{
+  "name": "perf-bench",
+  "version": "1.0.0",
+  "description": "Performance benchmarking tool.",
+  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@8.15.7",
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "perf-bench": "./bin.mjs"
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "watch": "tsc -p . --watch",
+    "build:readme": "pnpm build:readme:help && pnpm build:readme:example && pnpm build:readme:inject && prettier -w README.md",
+    "build:readme:help": "./bin.mjs --help > static/help.txt",
+    "build:readme:example": "./bin.mjs map > static/example.txt",
+    "build:readme:inject": "inject-markdown README.md",
+    "coverage": "vitest run --coverage",
+    "app": "node ./bin.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepare": "pnpm build"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs"
+    }
+  },
+  "keywords": [
+    "performance",
+    "benchmark",
+    "cli",
+    "node",
+    "tool"
+  ],
+  "author": {
+    "name": "Street Side Software",
+    "url": "https://github.com/streetsidesoftware"
+  },
+  "bugs": {
+    "url": "https://github.com/streetsidesoftware/template-typescript-cli-app/issues"
+  },
+  "homepage": "https://github.com/streetsidesoftware/template-typescript-cli-app#readme",
+  "license": "MIT",
+  "devDependencies": {
+    "lorem-ipsum": "^2.0.8"
+  },
+  "dependencies": {
+    "as-table": "^1.0.55",
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "globby": "^14.0.1",
+    "ora": "^8.0.1"
+  },
+  "files": [
+    "bin.mjs",
+    "dist/**/*.mjs",
+    "dist/**/*.js",
+    "!**/*.test.*",
+    "!**/*.map"
+  ]
+}
