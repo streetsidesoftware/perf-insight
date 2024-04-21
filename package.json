@@ -1,6 +1,6 @@
 {
   "name": "perf-bench-mono",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Example command line tool.",
   "type": "module",
   "private": true,
