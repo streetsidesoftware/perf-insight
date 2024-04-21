@@ -1,3 +1,3 @@
-import { run } from './dist/app.mjs';
+#!/usr/bin/env node
 
-run();
+import './packages/perf-bench/bin.mjs';

@@ -8,6 +8,9 @@
   "engines": {
     "node": ">=18"
   },
+  "bin": {
+    "bin": "./bin.mjs"
+  },
   "scripts": {
     "build": "pnpm -r --stream --workspace-concurrency=2 run build",
     "coverage": "pnpm -r --stream --workspace-concurrency=2 run coverage",
@@ -52,6 +55,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "globals": "^15.0.0",
     "inject-markdown": "^3.0.0",
+    "perf-bench": "workspace:*",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.7.0",

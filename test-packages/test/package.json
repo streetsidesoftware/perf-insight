@@ -8,9 +8,6 @@
   "engines": {
     "node": ">=18"
   },
-  "bin": {
-    "perf-bench": "./bin.mjs"
-  },
   "scripts": {
     "build": "tsc -p .",
     "watch": "tsc -p . --watch",
@@ -30,6 +27,5 @@
     "cspell-trie-lib": "^8.7.0",
     "lorem-ipsum": "^2.0.8",
     "perf-bench": "workspace:*"
-  },
-  "files": []
+  }
 }

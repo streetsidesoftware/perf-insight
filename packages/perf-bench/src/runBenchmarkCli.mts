@@ -33,6 +33,7 @@ async function run(args: string[]) {
     const errors: Error[] = [];
 
     async function importFile(file: string) {
+        console.log('File: %s', file);
         const url = new URL(file, cwdUrl).toString();
         try {
             await import(url);
