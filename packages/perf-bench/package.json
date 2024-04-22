@@ -1,6 +1,6 @@
 {
   "name": "perf-bench",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Performance benchmarking tool.",
   "type": "module",
   "packageManager": "pnpm@8.15.7",

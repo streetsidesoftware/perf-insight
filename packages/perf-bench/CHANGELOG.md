@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/streetsidesoftware/perf-bench/compare/1.0.0...1.0.1) (2024-04-22)
+
+
+### Bug Fixes
+
+* Make package public ([9fbfa82](https://github.com/streetsidesoftware/perf-bench/commit/9fbfa82df72854977890718cd1affb531949133a))
+
 ## [1.0.0](https://github.com/streetsidesoftware/perf-bench/compare/v1.0.0...1.0.0) (2024-04-22)
 
 
