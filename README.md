@@ -1,12 +1,6 @@
-<!--- @@inject: ./packages/perf-bench/README.md --->
-
 # Perf Bench
 
 Performance Benchmarking Suite for NodeJS.
-
-This is a collection of perf tests. They are designed to check assumptions on performance.
-
-This is a simple command line tool that lists files matching the provided globs.
 
 ## Install
 
@@ -16,48 +10,87 @@ This is a simple command line tool that lists files matching the provided globs.
 
 ## CLI Help
 
-1. `npx perf-bench --help`
+**`npx perf-bench --help`**
 
-   ```
-   Usage: perf runner [options] [filter...]
+<!--- @@inject: static/help.txt --->
 
-   Run performance tests.
+```
+Usage: perf-bench [options] [filter...]
 
-   Arguments:
-     filter                   perf file filter.
+Benchmark performance suites.
 
-   Options:
-     -a, --all                run all tests (default: false)
-     -t, --timeout <timeout>  override the timeout for each test
-     -s, --suite <suite...>   run matching suites
-     -T, --test <test...>     run matching test found in suites
-     --repeat <count>         repeat the tests (default: 1)
-     -h, --help               display help for command
-   ```
+Arguments:
+  filter                   Perf file filter.
 
-1. `npx perf-bench map`
+Options:
+  -a, --all                Run all perf files. (default: false)
+  -t, --timeout <timeout>  Override the timeout for each test suite.
+  -s, --suite <suite...>   Run only matching suites.
+  -T, --test <test...>     Run only matching test found in suites
+  --repeat <count>         Repeat the tests. (default: 1)
+  -h, --help               display help for command
+```
 
-   **Example:**
+<!--- @@inject-end: static/help.txt --->
 
-   ```
-   File: test-packages/test/dist/measureMap.perf.mjs
-   Running Perf Suite: map
-   Measure .map and .filter performance with different functions
-   ✔ (a) => a.length             35289.16 ops/sec  69189 iterations 1960.63ms time
-   ✔ filter Boolean              15376.08 ops/sec  30478 iterations 1982.17ms time
-   ✔ filter (a) => a             17344.62 ops/sec  34338 iterations 1979.75ms time
-   ✔ filter (a) => !!a           16124.49 ops/sec  31952 iterations 1981.58ms time
-   ✔ (a) => { return a.length; } 33345.17 ops/sec  65630 iterations 1968.20ms time
-   ✔ (fnLen)                     33272.30 ops/sec  65509 iterations 1968.87ms time
-   ✔ (a) => fnLen(a)             33846.62 ops/sec  66666 iterations 1969.65ms time
-   ✔ (vfLen)                     34360.59 ops/sec  67659 iterations 1969.09ms time
-   ✔ for of                      22680.99 ops/sec  44821 iterations 1976.15ms time
-   ✔ for i                       24474.31 ops/sec  48298 iterations 1973.42ms time
-   ✔ for i r[i]=v                18181.71 ops/sec  35950 iterations 1977.26ms time
-   ✔ for i Array.from(words)     34932.02 ops/sec  68736 iterations 1967.71ms time
-   ✔ for i Array.from             2077.77 ops/sec   4151 iterations 1997.81ms time
-   ✔ for i Array(size)           32803.80 ops/sec  64506 iterations 1966.42ms time
-   done.
-   ```
+## Running Benchmarks
 
-<!--- @@inject-end: ./packages/perf-bench/README.md --->
+**Example `.perf` file**
+
+<!--- @@inject: examples/dist/exampleMap.perf.mjs --->
+
+```javascript
+import { loremIpsum } from 'lorem-ipsum';
+import { suite } from 'perf-bench';
+// Use 2 seconds as the default timeout for tests in the suite.
+// The `--timeout` option can override this value.
+const defaultTimeout = 2000;
+// ts-check
+suite('map', 'Measure .map performance with different functions', async (test) => {
+  let knownWords = [];
+  test.beforeAll(() => {
+    knownWords = loremIpsum({ count: 10000, units: 'words' }).split(' ');
+  });
+  test('map((a) => a.length)', () => {
+    return knownWords.map((a) => a.length);
+  });
+  test('.map((a) => { return a.length; })', () => {
+    return knownWords.map((a) => {
+      return a.length;
+    });
+  });
+  test('.map(Boolean)', () => {
+    return knownWords.map(Boolean);
+  });
+  test('.map((a) => !a.length)', () => {
+    return knownWords.map((a) => !a.length);
+  });
+  test('.map((a) => { return a.length; })', () => {
+    return knownWords.map((a) => {
+      return a.length;
+    });
+  });
+}).setTimeout(defaultTimeout); // set the default timeout for this suite.
+```
+
+<!--- @@inject-end: examples/dist/exampleMap.perf.mjs --->
+
+**Example Output:**
+
+**`npx perf-bench exampleMap.perf.mjs --timeout 500`**
+
+<!--- @@inject: static/example.txt --->
+
+```
+File: examples/dist/exampleMap.perf.mjs
+Running Perf Suite: map
+Measure .map performance with different functions
+✔ map((a) => a.length)              27760.39 ops/sec  13622 iterations  490.70ms time
+✔ .map((a) => { return a.length; }) 16142.85 ops/sec   7972 iterations  493.84ms time
+✔ .map(Boolean)                      6775.20 ops/sec   3366 iterations  496.81ms time
+✔ .map((a) => !a.length)            14446.33 ops/sec   7160 iterations  495.63ms time
+✔ .map((a) => { return a.length; }) 16726.08 ops/sec   8279 iterations  494.98ms time
+done.
+```
+
+<!--- @@inject-end: static/example.txt --->
