@@ -34,4 +34,4 @@ jobs:
       - name: Publish to NPM
         env:
           NODE_AUTH_TOKEN: ${{secrets.PUBLISH_NPM}}
-        run: pnpm publish packages/perf-bench ${{ (inputs.dry_run && '--dry-run') || '' }}
+        run: pnpm publish packages/perf-insight ${{ (inputs.dry_run && '--dry-run') || '' }}

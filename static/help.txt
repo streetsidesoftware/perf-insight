@@ -1,4 +1,4 @@
-Usage: perf-bench [options] [filter...]
+Usage: perf-insight [options] [filter...]
 
 Benchmark performance suites.
 

@@ -22,7 +22,7 @@ export async function app(program = defaultCommand): Promise<Command> {
     argument.variadic = true;
 
     program
-        .name('perf-bench')
+        .name('perf-insight')
         .addArgument(argument)
         .description('Benchmark performance suites.')
         .option('-a, --all', 'Run all perf files.', false)

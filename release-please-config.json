@@ -2,8 +2,8 @@
     "include-component-in-tag": false,
     "include-v-in-tag": false,
     "packages": {
-        "packages/perf-bench": {
-            "component": "perf-bench",
+        "packages/perf-insight": {
+            "component": "perf-insight",
             "releaseType": "node"
         }
     }

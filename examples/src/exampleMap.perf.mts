@@ -1,5 +1,5 @@
 import { loremIpsum } from 'lorem-ipsum';
-import { suite } from 'perf-bench';
+import { suite } from 'perf-insight';
 
 // Use 2 seconds as the default timeout for tests in the suite.
 // The `--timeout` option can override this value.

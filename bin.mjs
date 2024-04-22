@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-import './packages/perf-bench/bin.mjs';
+import './packages/perf-insight/bin.mjs';

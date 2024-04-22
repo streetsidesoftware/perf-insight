@@ -1,5 +1,5 @@
 {
-  "name": "test-perf-bench",
+  "name": "test-perf-insight",
   "version": "1.0.0",
   "description": "Example perf tests.",
   "type": "module",
@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsc -p .",
     "watch": "tsc -p . --watch",
-    "test": "perf-bench example --suite map -t 500",
+    "test": "perf-insight example --suite map -t 500",
     "prepare": "pnpm build"
   },
   "author": {
@@ -19,13 +19,13 @@
     "url": "https://github.com/streetsidesoftware"
   },
   "bugs": {
-    "url": "https://github.com/streetsidesoftware/perf-bench/issues"
+    "url": "https://github.com/streetsidesoftware/perf-insight/issues"
   },
-  "homepage": "https://github.com/streetsidesoftware/perf-bench#readme",
+  "homepage": "https://github.com/streetsidesoftware/perf-insight#readme",
   "license": "MIT",
   "dependencies": {
     "cspell-trie-lib": "^8.7.0",
     "lorem-ipsum": "^2.0.8",
-    "perf-bench": "workspace:*"
+    "perf-insight": "workspace:*"
   }
 }

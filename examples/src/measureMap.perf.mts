@@ -1,5 +1,5 @@
 import { loremIpsum } from 'lorem-ipsum';
-import { suite } from 'perf-bench';
+import { suite } from 'perf-insight';
 
 const defaultTimeout = 2000;
 

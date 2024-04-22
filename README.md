@@ -1,21 +1,21 @@
-# Perf Bench
+# Performance Insight
 
 Performance Benchmarking Suite for NodeJS.
 
 ## Install
 
-1. `npm i -D perf-bench`
+1. `npm i -D perf-insight`
 
 ## Getting Started.
 
 ## CLI Help
 
-**`npx perf-bench --help`**
+**`npx perf-insight --help`**
 
 <!--- @@inject: static/help.txt --->
 
 ```
-Usage: perf-bench [options] [filter...]
+Usage: perf-insight [options] [filter...]
 
 Benchmark performance suites.
 
@@ -41,7 +41,7 @@ Options:
 
 ```javascript
 import { loremIpsum } from 'lorem-ipsum';
-import { suite } from 'perf-bench';
+import { suite } from 'perf-insight';
 // Use 2 seconds as the default timeout for tests in the suite.
 // The `--timeout` option can override this value.
 const defaultTimeout = 2000;
@@ -77,7 +77,7 @@ suite('map', 'Measure .map performance with different functions', async (test) =
 
 **Example Output:**
 
-**`npx perf-bench exampleMap.perf.mjs --timeout 500`**
+**`npx perf-insight exampleMap.perf.mjs --timeout 500`**
 
 <!--- @@inject: static/example.txt --->
 
@@ -85,11 +85,11 @@ suite('map', 'Measure .map performance with different functions', async (test) =
 File: examples/dist/exampleMap.perf.mjs
 Running Perf Suite: map
 Measure .map performance with different functions
-✔ map((a) => a.length)              27760.39 ops/sec  13622 iterations  490.70ms time
-✔ .map((a) => { return a.length; }) 16142.85 ops/sec   7972 iterations  493.84ms time
-✔ .map(Boolean)                      6775.20 ops/sec   3366 iterations  496.81ms time
-✔ .map((a) => !a.length)            14446.33 ops/sec   7160 iterations  495.63ms time
-✔ .map((a) => { return a.length; }) 16726.08 ops/sec   8279 iterations  494.98ms time
+✔ map((a) => a.length)              28560.04 ops/sec  14016 iterations  490.76ms time
+✔ .map((a) => { return a.length; }) 16871.89 ops/sec   8336 iterations  494.08ms time
+✔ .map(Boolean)                      7359.97 ops/sec   3656 iterations  496.74ms time
+✔ .map((a) => !a.length)            13735.05 ops/sec   6812 iterations  495.96ms time
+✔ .map((a) => { return a.length; }) 17403.23 ops/sec   8622 iterations  495.43ms time
 done.
 ```
 

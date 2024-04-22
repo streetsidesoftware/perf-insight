@@ -1,5 +1,5 @@
 {
-  "name": "perf-bench-mono",
+  "name": "perf-insight-mono",
   "version": "1.0.0",
   "description": "Example command line tool.",
   "type": "module",
@@ -26,7 +26,7 @@
     "prettier:fix": "prettier -w .",
     "eslint:check": "eslint .",
     "eslint:fix": "eslint . --fix",
-    "app": "perf-bench"
+    "app": "perf-insight"
   },
   "keywords": [
     "template",
@@ -37,9 +37,9 @@
     "url": "https://github.com/streetsidesoftware"
   },
   "bugs": {
-    "url": "https://github.com/streetsidesoftware/perf-bench/issues"
+    "url": "https://github.com/streetsidesoftware/perf-insight/issues"
   },
-  "homepage": "https://github.com/streetsidesoftware/perf-bench#readme",
+  "homepage": "https://github.com/streetsidesoftware/perf-insight#readme",
   "license": "MIT",
   "devDependencies": {
     "@eslint/eslintrc": "^3.0.2",
@@ -59,7 +59,7 @@
     "globals": "^15.0.0",
     "inject-markdown": "^3.0.0",
     "lorem-ipsum": "^2.0.8",
-    "perf-bench": "workspace:*",
+    "perf-insight": "workspace:*",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.7.0",

@@ -1,5 +1,5 @@
 import { loremIpsum } from 'lorem-ipsum';
-import { suite } from 'perf-bench';
+import { suite } from 'perf-insight';
 
 import { SimpleTrie } from './lib/SimpleTrie.mjs';
 import { Trie } from './lib/Trie.mjs';

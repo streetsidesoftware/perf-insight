@@ -1,14 +1,15 @@
 {
-  "name": "perf-bench",
+  "name": "perf-insight",
   "version": "1.0.1",
-  "description": "Performance benchmarking tool.",
+  "description": "Performance benchmarking tool for NodeJS.",
   "type": "module",
   "packageManager": "pnpm@8.15.7",
   "engines": {
     "node": ">=18"
   },
   "bin": {
-    "perf-bench": "./bin.mjs"
+    "insight": "./bin.mjs",
+    "perf-insight": "./bin.mjs"
   },
   "scripts": {
     "build": "tsc -p .",
@@ -36,9 +37,9 @@
     "url": "https://github.com/streetsidesoftware"
   },
   "bugs": {
-    "url": "https://github.com/streetsidesoftware/perf-bench/issues"
+    "url": "https://github.com/streetsidesoftware/perf-insight/issues"
   },
-  "homepage": "https://github.com/streetsidesoftware/perf-bench#readme",
+  "homepage": "https://github.com/streetsidesoftware/perf-insight#readme",
   "license": "MIT",
   "devDependencies": {
     "lorem-ipsum": "^2.0.8"

@@ -2,7 +2,7 @@ import assert from 'node:assert';
 import fs from 'node:fs/promises';
 
 import { buildITrieFromWords, buildTrie, buildTrieFast, TrieBuilder } from 'cspell-trie-lib';
-import { suite } from 'perf-bench';
+import { suite } from 'perf-insight';
 
 import { SimpleTrie } from './lib/SimpleTrie.mjs';
 import { Trie } from './lib/Trie.mjs';
