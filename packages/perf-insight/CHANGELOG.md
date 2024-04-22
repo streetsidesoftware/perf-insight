@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.2](https://github.com/streetsidesoftware/perf-insight/compare/1.0.1...1.0.2) (2024-04-22)
+
+
+### Bug Fixes
+
+* Rename to `perf-insight` ([a7d91a2](https://github.com/streetsidesoftware/perf-insight/commit/a7d91a25f4494353cc709e2641787361f663bcb6))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0 ([c70c381](https://github.com/streetsidesoftware/perf-insight/commit/c70c3819b00874ca762d48a9d09979f668c454c0))
+* release 1.0.2 ([f9f440d](https://github.com/streetsidesoftware/perf-insight/commit/f9f440d72bd5a57f0bfb1c23b47da67bde67ac28))
+
 ## [1.0.1](https://github.com/streetsidesoftware/perf-insight/compare/1.0.0...1.0.1) (2024-04-22)
 
 
