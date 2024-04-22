@@ -60,8 +60,6 @@ export async function app(program = defaultCommand): Promise<Command> {
                     suiteNamesToRun.some((name) => file.toLowerCase().includes(name.toLowerCase())),
             );
 
-            console.log('%o', files);
-
             await spawnRunners(files, options);
 
             console.log(chalk.green('done.'));
