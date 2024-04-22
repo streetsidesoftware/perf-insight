@@ -31,9 +31,9 @@ suite('map', 'Measure .map performance with different functions', async (test) =
         return knownWords.map((a) => !a.length);
     });
 
-    test('.map((a) => { return a.length; })', () => {
+    test('.map((a) => { return !a.length; })', () => {
         return knownWords.map((a) => {
-            return a.length;
+            return !a.length;
         });
     });
 }).setTimeout(defaultTimeout); // set the default timeout for this suite.

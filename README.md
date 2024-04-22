@@ -68,9 +68,9 @@ suite('map', 'Measure .map performance with different functions', async (test) =
   test('.map((a) => !a.length)', () => {
     return knownWords.map((a) => !a.length);
   });
-  test('.map((a) => { return a.length; })', () => {
+  test('.map((a) => { return !a.length; })', () => {
     return knownWords.map((a) => {
-      return a.length;
+      return !a.length;
     });
   });
 }).setTimeout(defaultTimeout); // set the default timeout for this suite.
@@ -89,11 +89,11 @@ suite('map', 'Measure .map performance with different functions', async (test) =
 File: examples/dist/exampleMap.perf.mjs
 Running Perf Suite: map
 Measure .map performance with different functions
-✔ map((a) => a.length)              24059.07 ops/sec  11792 iterations  490.13ms time
-✔ .map((a) => { return a.length; }) 13708.22 ops/sec   6778 iterations  494.45ms time
-✔ .map(Boolean)                      7407.73 ops/sec   3682 iterations  497.05ms time
-✔ .map((a) => !a.length)            13040.03 ops/sec   6469 iterations  496.09ms time
-✔ .map((a) => { return a.length; }) 11657.43 ops/sec   5774 iterations  495.31ms time
+✔ map((a) => a.length)               28054.13 ops/sec  13754 iterations  490.27ms time
+✔ .map((a) => { return a.length; })  17902.43 ops/sec   8844 iterations  494.01ms time
+✔ .map(Boolean)                       9751.51 ops/sec   4844 iterations  496.74ms time
+✔ .map((a) => !a.length)             15737.79 ops/sec   7804 iterations  495.88ms time
+✔ .map((a) => { return !a.length; }) 14420.30 ops/sec   7148 iterations  495.69ms time
 done.
 ```
 
