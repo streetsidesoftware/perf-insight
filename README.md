@@ -35,7 +35,7 @@ Options:
 
 ## Running Benchmarks
 
-**Example `.perf` file**
+**Example `example.perf.mjs` file**
 
 <!--- @@inject: examples/dist/exampleMap.perf.mjs --->
 
