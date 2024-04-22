@@ -18,24 +18,26 @@ const urlRunnerCli = new URL('./runBenchmarkCli.mjs', import.meta.url).toString(
 const pathToRunnerCliModule = fileURLToPath(urlRunnerCli);
 
 export async function app(program = defaultCommand): Promise<Command> {
-    const argument = new Argument('[filter...]', 'perf file filter.');
+    const argument = new Argument('[filter...]', 'Perf file filter.');
     argument.variadic = true;
 
     program
-        .name('perf runner')
+        .name('perf-bench')
         .addArgument(argument)
-        .description('Run performance tests.')
-        .option('-a, --all', 'run all tests', false)
-        .option('-t, --timeout <timeout>', 'override the timeout for each test', (v) => Number(v))
-        .option('-s, --suite <suite...>', 'run matching suites', (v, a: string[] | undefined) => (a || []).concat(v))
-        .option('-T, --test <test...>', 'run matching test found in suites', (v, a: string[] | undefined) =>
+        .description('Benchmark performance suites.')
+        .option('-a, --all', 'Run all perf files.', false)
+        .option('-t, --timeout <timeout>', 'Override the timeout for each test suite.', (v) => Number(v))
+        .option('-s, --suite <suite...>', 'Run only matching suites.', (v, a: string[] | undefined) =>
             (a || []).concat(v),
         )
-        .option('--repeat <count>', 'repeat the tests', (v) => Number(v), 1)
+        .option('-T, --test <test...>', 'Run only matching test found in suites', (v, a: string[] | undefined) =>
+            (a || []).concat(v),
+        )
+        .option('--repeat <count>', 'Repeat the tests.', (v) => Number(v), 1)
         .action(async (suiteNamesToRun: string[], options: AppOptions, command: Command) => {
             if (!suiteNamesToRun.length && !options.all) {
                 console.error(chalk.red('No tests to run.'));
-                console.error(chalk.yellow('Use --all to run all tests.\n'));
+                console.error(chalk.yellow(`Use ${chalk.green('--all')} to run all tests.\n`));
                 command.help();
             }
 
@@ -44,7 +46,9 @@ export async function app(program = defaultCommand): Promise<Command> {
             const found = await findFiles(['**/*.perf.{js,mjs,cjs}', '!**/node_modules/**']);
 
             const files = found.filter(
-                (file) => !suiteNamesToRun.length || suiteNamesToRun.some((name) => file.includes(name)),
+                (file) =>
+                    !suiteNamesToRun.length ||
+                    suiteNamesToRun.some((name) => file.toLowerCase().includes(name.toLowerCase())),
             );
 
             await spawnRunners(files, options);

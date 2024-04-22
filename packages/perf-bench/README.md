@@ -1,50 +1,88 @@
-# Perf Tests
+<!--- @@inject: ../../README.md --->
 
-This is a collection of perf tests. They are designed to check assumptions on performance.
+# Perf Bench
 
-This is a simple command line tool that lists files matching the provided globs.
+Performance Benchmarking Suite for NodeJS.
 
-## Getting Started
+## Install
 
-1. Install [`pnpm`](https://pnppm.io)
+1. `npm i -D perf-bench`
 
-1. `pnpm i`
+## Getting Started.
 
-1. `pnpm build`
+## CLI Help
 
-1. `pnpm test`
+**`npx perf-bench --help`**
 
-1. `pnpm run app --help`
+```
+Usage: perf-bench [options] [filter...]
 
-   <!--- @@inject: static/help.txt --->
+Benchmark performance suites.
 
-   ```
-   Usage: perf runner [options] [filter...]
+Arguments:
+  filter                   Perf file filter.
 
-   Run performance tests.
+Options:
+  -a, --all                Run all perf files. (default: false)
+  -t, --timeout <timeout>  Override the timeout for each test suite.
+  -s, --suite <suite...>   Run only matching suites.
+  -T, --test <test...>     Run only matching test found in suites
+  --repeat <count>         Repeat the tests. (default: 1)
+  -h, --help               display help for command
+```
 
-   Arguments:
-     filter                   perf file filter.
+## Running Benchmarks
 
-   Options:
-     -a, --all                run all tests (default: false)
-     -t, --timeout <timeout>  override the timeout for each test
-     -s, --suite <suite...>   run matching suites
-     -T, --test <test...>     run matching test found in suites
-     --repeat <count>         repeat the tests (default: 1)
-     -h, --help               display help for command
-   ```
+**Example `.perf` file**
 
-   <!--- @@inject-end: static/help.txt --->
+```javascript
+import { loremIpsum } from 'lorem-ipsum';
+import { suite } from 'perf-bench';
+// Use 2 seconds as the default timeout for tests in the suite.
+// The `--timeout` option can override this value.
+const defaultTimeout = 2000;
+// ts-check
+suite('map', 'Measure .map performance with different functions', async (test) => {
+  let knownWords = [];
+  test.beforeAll(() => {
+    knownWords = loremIpsum({ count: 10000, units: 'words' }).split(' ');
+  });
+  test('map((a) => a.length)', () => {
+    return knownWords.map((a) => a.length);
+  });
+  test('.map((a) => { return a.length; })', () => {
+    return knownWords.map((a) => {
+      return a.length;
+    });
+  });
+  test('.map(Boolean)', () => {
+    return knownWords.map(Boolean);
+  });
+  test('.map((a) => !a.length)', () => {
+    return knownWords.map((a) => !a.length);
+  });
+  test('.map((a) => { return a.length; })', () => {
+    return knownWords.map((a) => {
+      return a.length;
+    });
+  });
+}).setTimeout(defaultTimeout); // set the default timeout for this suite.
+```
 
-1. `pnpm run app map`
+**Example Output:**
 
-   **Example:**
+**`npx perf-bench exampleMap.perf.mjs --timeout 500`**
 
-   <!--- @@inject: static/example.txt --->
+```
+File: examples/dist/exampleMap.perf.mjs
+Running Perf Suite: map
+Measure .map performance with different functions
+✔ map((a) => a.length)              27760.39 ops/sec  13622 iterations  490.70ms time
+✔ .map((a) => { return a.length; }) 16142.85 ops/sec   7972 iterations  493.84ms time
+✔ .map(Boolean)                      6775.20 ops/sec   3366 iterations  496.81ms time
+✔ .map((a) => !a.length)            14446.33 ops/sec   7160 iterations  495.63ms time
+✔ .map((a) => { return a.length; }) 16726.08 ops/sec   8279 iterations  494.98ms time
+done.
+```
 
-   ```
-   done.
-   ```
-
-   <!--- @@inject-end: static/example.txt --->
+<!--- @@inject-end: ../../README.md --->

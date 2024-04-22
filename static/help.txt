@@ -1,12 +1,14 @@
-Usage: perf runner [options] [test-methods...]
+Usage: perf-bench [options] [filter...]
 
-Run performance tests.
+Benchmark performance suites.
 
 Arguments:
-  test-methods             list of test methods to run (choices: "search",
-                           "anonymous", "map", "all", default: ["all"])
+  filter                   Perf file filter.
 
 Options:
-  -t, --timeout <timeout>  timeout for each test (default: 1000)
-  -V, --version            output the version number
+  -a, --all                Run all perf files. (default: false)
+  -t, --timeout <timeout>  Override the timeout for each test suite.
+  -s, --suite <suite...>   Run only matching suites.
+  -T, --test <test...>     Run only matching test found in suites
+  --repeat <count>         Repeat the tests. (default: 1)
   -h, --help               display help for command

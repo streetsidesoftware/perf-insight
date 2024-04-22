@@ -13,6 +13,10 @@
   },
   "scripts": {
     "build": "pnpm -r --stream --workspace-concurrency=2 run build",
+    "build:readme": "pnpm build:readme:help && pnpm build:readme:example && pnpm build:readme:inject && prettier -w \"**/README.md\"",
+    "build:readme:help": "./bin.mjs --help > static/help.txt",
+    "build:readme:example": "./bin.mjs exampleMap.perf.mjs -t 500 > static/example.txt",
+    "build:readme:inject": "inject-markdown  README.md \"packages/*/README.md\"",
     "coverage": "pnpm -r --stream --workspace-concurrency=2 run coverage",
     "test": "pnpm -r --stream --workspace-concurrency=2 run test",
     "lint": "pnpm eslint:check && pnpm prettier:check",

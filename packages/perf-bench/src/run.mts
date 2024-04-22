@@ -58,7 +58,10 @@ async function runTestSuites(
     async function _runSuite(suites: PerfSuite[]) {
         for (const suite of suites) {
             if (suitesRun.has(suite)) continue;
-            if (!filterSuite(suite)) continue;
+            if (!filterSuite(suite)) {
+                console.log(chalk.yellow(`Skipping Perf Suite: ${chalk.green(suite.name)} - not in filter.`));
+                continue;
+            }
             suitesRun.add(suite);
             console.log(chalk.green(`Running Perf Suite: ${suite.name}`));
             await suite.setTimeout(timeout).runTests({ tests: options.tests });
@@ -91,6 +94,6 @@ async function runTestSuites(
     function filterSuite(suite: PerfSuite): boolean {
         const { suites } = options;
         if (!suites?.length) return true;
-        return !!suites.find((name) => suite.name.toLowerCase().includes(name.toLowerCase()));
+        return suites.some((name) => suite.name.toLowerCase().includes(name.toLowerCase()));
     }
 }

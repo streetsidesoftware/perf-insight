@@ -1,60 +1,96 @@
-# Perf Tests
+# Perf Bench
 
-This is a collection of perf tests. They are designed to check assumptions on performance.
+Performance Benchmarking Suite for NodeJS.
 
-This is a simple command line tool that lists files matching the provided globs.
+## Install
 
-## Getting Started
+1. `npm i -D perf-bench`
 
-1. Install [`pnpm`](https://pnppm.io)
-1. `pnpm i`
-1. `pnpm build`
-1. `pnpm test`
-1. `pnpm run app --help`
+## Getting Started.
 
-   <!--- @@inject: static/help.txt --->
+## CLI Help
 
-   ```
-   Usage: perf runner [options] [test-methods...]
+**`npx perf-bench --help`**
 
-   Run performance tests.
+<!--- @@inject: static/help.txt --->
 
-   Arguments:
-     test-methods             list of test methods to run (choices: "search",
-                              "anonymous", "map", "all", default: ["all"])
+```
+Usage: perf-bench [options] [filter...]
 
-   Options:
-     -t, --timeout <timeout>  timeout for each test (default: 1000)
-     -V, --version            output the version number
-     -h, --help               display help for command
-   ```
+Benchmark performance suites.
 
-   <!--- @@inject-end: static/help.txt --->
+Arguments:
+  filter                   Perf file filter.
 
-1. `pnpm run app map`
+Options:
+  -a, --all                Run all perf files. (default: false)
+  -t, --timeout <timeout>  Override the timeout for each test suite.
+  -s, --suite <suite...>   Run only matching suites.
+  -T, --test <test...>     Run only matching test found in suites
+  --repeat <count>         Repeat the tests. (default: 1)
+  -h, --help               display help for command
+```
 
-   **Example:**
+<!--- @@inject-end: static/help.txt --->
 
-   <!--- @@inject: static/example.txt --->
+## Running Benchmarks
 
-   ```
-   Running test: map
-   Running: Map Anonymous:
-   ✔ (a) => a.length            : ops: 30756.44 cnt:  30482 mean: 0.056665 p95:  0.20633 min/max: 0.020739/  1.2881 991.08ms
-   ✔ filter Boolean             : ops: 10380.80 cnt:  10339 mean:  0.14109 p95:  0.30647 min/max: 0.044631/ 0.65964 995.97ms
-   ✔ filter (a) => a            : ops: 14978.50 cnt:  14922 mean:  0.10100 p95:  0.23417 min/max: 0.038621/ 0.43152 996.23ms
-   ✔ filter (a) => !!a          : ops: 12926.77 cnt:  12883 mean:  0.11535 p95:  0.26402 min/max: 0.042264/ 0.71627 996.61ms
-   ✔ (a) => { return a.length; }: ops: 31771.79 cnt:  31558 mean: 0.050315 p95:  0.13926 min/max: 0.021965/ 0.38313 993.27ms
-   ✔ (fnLen)                    : ops: 29314.10 cnt:  29129 mean: 0.055057 p95:  0.15008 min/max: 0.021760/ 0.48103 993.69ms
-   ✔ (a) => fnLen(a)            : ops: 29233.77 cnt:  29043 mean: 0.055084 p95:  0.14469 min/max: 0.021979/ 0.37546 993.47ms
-   ✔ (vfLen)                    : ops: 31732.97 cnt:  31525 mean: 0.051079 p95:  0.13862 min/max: 0.021709/ 0.36765 993.45ms
-   ✔ for of                     : ops: 21886.60 cnt:  21765 mean: 0.061837 p95:  0.18468 min/max: 0.036873/  1.0753 994.44ms
-   ✔ for i                      : ops: 24704.07 cnt:  24556 mean: 0.051921 p95:  0.14648 min/max: 0.032250/ 0.64389 994.01ms
-   ✔ for i r[i]=v               : ops: 19494.68 cnt:  19400 mean: 0.065557 p95:  0.17119 min/max: 0.040939/ 0.49368 995.14ms
-   ✔ for i Array.from(words)    : ops: 33609.02 cnt:  33345 mean: 0.040022 p95:  0.12977 min/max: 0.025327/ 0.69438 992.14ms
-   ✔ for i Array.from           : ops:  2041.26 cnt:   2040 mean:  0.50531 p95:  0.70403 min/max:  0.43681/  1.2301 999.38ms
-   ✔ for i Array(size)          : ops: 32333.11 cnt:  32082 mean: 0.056348 p95:  0.63695 min/max: 0.024706/  6.5348 992.23ms
-   done.
-   ```
+**Example `.perf` file**
 
-   <!--- @@inject-end: static/example.txt --->
+<!--- @@inject: examples/dist/exampleMap.perf.mjs --->
+
+```javascript
+import { loremIpsum } from 'lorem-ipsum';
+import { suite } from 'perf-bench';
+// Use 2 seconds as the default timeout for tests in the suite.
+// The `--timeout` option can override this value.
+const defaultTimeout = 2000;
+// ts-check
+suite('map', 'Measure .map performance with different functions', async (test) => {
+  let knownWords = [];
+  test.beforeAll(() => {
+    knownWords = loremIpsum({ count: 10000, units: 'words' }).split(' ');
+  });
+  test('map((a) => a.length)', () => {
+    return knownWords.map((a) => a.length);
+  });
+  test('.map((a) => { return a.length; })', () => {
+    return knownWords.map((a) => {
+      return a.length;
+    });
+  });
+  test('.map(Boolean)', () => {
+    return knownWords.map(Boolean);
+  });
+  test('.map((a) => !a.length)', () => {
+    return knownWords.map((a) => !a.length);
+  });
+  test('.map((a) => { return a.length; })', () => {
+    return knownWords.map((a) => {
+      return a.length;
+    });
+  });
+}).setTimeout(defaultTimeout); // set the default timeout for this suite.
+```
+
+<!--- @@inject-end: examples/dist/exampleMap.perf.mjs --->
+
+**Example Output:**
+
+**`npx perf-bench exampleMap.perf.mjs --timeout 500`**
+
+<!--- @@inject: static/example.txt --->
+
+```
+File: examples/dist/exampleMap.perf.mjs
+Running Perf Suite: map
+Measure .map performance with different functions
+✔ map((a) => a.length)              27760.39 ops/sec  13622 iterations  490.70ms time
+✔ .map((a) => { return a.length; }) 16142.85 ops/sec   7972 iterations  493.84ms time
+✔ .map(Boolean)                      6775.20 ops/sec   3366 iterations  496.81ms time
+✔ .map((a) => !a.length)            14446.33 ops/sec   7160 iterations  495.63ms time
+✔ .map((a) => { return a.length; }) 16726.08 ops/sec   8279 iterations  494.98ms time
+done.
+```
+
+<!--- @@inject-end: static/example.txt --->

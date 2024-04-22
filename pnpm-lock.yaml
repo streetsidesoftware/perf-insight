@@ -78,6 +78,18 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0(@types/node@20.12.7)
 
+  examples:
+    dependencies:
+      cspell-trie-lib:
+        specifier: ^8.7.0
+        version: 8.7.0
+      lorem-ipsum:
+        specifier: ^2.0.8
+        version: 2.0.8
+      perf-bench:
+        specifier: workspace:*
+        version: link:../packages/perf-bench
+
   packages/perf-bench:
     dependencies:
       as-table:
@@ -99,18 +111,6 @@ importers:
       lorem-ipsum:
         specifier: ^2.0.8
         version: 2.0.8
-
-  test-packages/test:
-    dependencies:
-      cspell-trie-lib:
-        specifier: ^8.7.0
-        version: 8.7.0
-      lorem-ipsum:
-        specifier: ^2.0.8
-        version: 2.0.8
-      perf-bench:
-        specifier: workspace:*
-        version: link:../../packages/perf-bench
 
 packages:
 
