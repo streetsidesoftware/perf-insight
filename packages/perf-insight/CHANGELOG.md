@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/streetsidesoftware/perf-bench/compare/1.0.1...1.0.2) (2024-04-22)
+
+
+### Bug Fixes
+
+* Rename to `perf-insight` ([a7d91a2](https://github.com/streetsidesoftware/perf-bench/commit/a7d91a25f4494353cc709e2641787361f663bcb6))
+
 ## [1.0.1](https://github.com/streetsidesoftware/perf-insight/compare/1.0.0...1.0.1) (2024-04-22)
 
 
