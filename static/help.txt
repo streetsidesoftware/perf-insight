@@ -1,14 +1,17 @@
 Usage: perf-insight [options] [filter...]
 
-Benchmark performance suites.
+Benchmark performance suites found in `**/*.perf.{js,cjs,mjs}`.
 
 Arguments:
   filter                   Perf file filter.
 
 Options:
   -a, --all                Run all perf files. (default: false)
+  -f, --file <glob...>     Globs to search for perf files.
+  -x, --exclude <glob...>  Globs to exclude from search.
   -t, --timeout <timeout>  Override the timeout for each test suite.
   -s, --suite <suite...>   Run only matching suites.
   -T, --test <test...>     Run only matching test found in suites
   --repeat <count>         Repeat the tests. (default: 1)
+  --register <loader>      Register a module loader. (e.g. ts-node/esm)
   -h, --help               display help for command

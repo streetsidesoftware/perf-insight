@@ -17,17 +17,20 @@ Performance Benchmarking Suite for NodeJS.
 ```
 Usage: perf-insight [options] [filter...]
 
-Benchmark performance suites.
+Benchmark performance suites found in `**/*.perf.{js,cjs,mjs}`.
 
 Arguments:
   filter                   Perf file filter.
 
 Options:
   -a, --all                Run all perf files. (default: false)
+  -f, --file <glob...>     Globs to search for perf files.
+  -x, --exclude <glob...>  Globs to exclude from search.
   -t, --timeout <timeout>  Override the timeout for each test suite.
   -s, --suite <suite...>   Run only matching suites.
   -T, --test <test...>     Run only matching test found in suites
   --repeat <count>         Repeat the tests. (default: 1)
+  --register <loader>      Register a module loader. (e.g. ts-node/esm)
   -h, --help               display help for command
 ```
 
@@ -82,15 +85,26 @@ suite('map', 'Measure .map performance with different functions', async (test) =
 <!--- @@inject: static/example.txt --->
 
 ```
+[ 'examples/dist/exampleMap.perf.mjs', [length]: 1 ]
 File: examples/dist/exampleMap.perf.mjs
 Running Perf Suite: map
 Measure .map performance with different functions
-✔ map((a) => a.length)              27203.18 ops/sec  13352 iterations  490.82ms time
-✔ .map((a) => { return a.length; }) 15047.53 ops/sec   7437 iterations  494.23ms time
-✔ .map(Boolean)                      7700.32 ops/sec   3827 iterations  496.99ms time
-✔ .map((a) => !a.length)            11501.15 ops/sec   5700 iterations  495.60ms time
-✔ .map((a) => { return a.length; }) 16183.73 ops/sec   8018 iterations  495.44ms time
+✔ map((a) => a.length)              24059.07 ops/sec  11792 iterations  490.13ms time
+✔ .map((a) => { return a.length; }) 13708.22 ops/sec   6778 iterations  494.45ms time
+✔ .map(Boolean)                      7407.73 ops/sec   3682 iterations  497.05ms time
+✔ .map((a) => !a.length)            13040.03 ops/sec   6469 iterations  496.09ms time
+✔ .map((a) => { return a.length; }) 11657.43 ops/sec   5774 iterations  495.31ms time
 done.
 ```
 
 <!--- @@inject-end: static/example.txt --->
+
+## TypeScript Support
+
+It is necessary to register a TypeScript loader like [ts-node](https://typestrong.org/ts-node/).
+
+**Usage:**
+
+```
+npx perf-insight --file "**/*.perf.mts" --timeout 500 --register ts-node/esm
+```

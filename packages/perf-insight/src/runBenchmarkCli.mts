@@ -20,6 +20,7 @@ async function run(args: string[]) {
             timeout: { type: 'string', short: 't' },
             test: { type: 'string', short: 'T', multiple: true },
             suite: { type: 'string', short: 'S', multiple: true },
+            register: { type: 'string', multiple: true },
         },
     } as const satisfies ParseArgsConfig;
 
@@ -29,6 +30,7 @@ async function run(args: string[]) {
     const timeout = Number(parsed.values['timeout'] || '0') || undefined;
     const tests = parsed.values['test'];
     const suites = parsed.values['suite'];
+    await registerLoaders(parsed.values['register']);
 
     const errors: Error[] = [];
 
@@ -53,6 +55,25 @@ async function run(args: string[]) {
     }
 
     await runBenchmarkSuites(undefined, { repeat, timeout, tests, suites });
+}
+
+async function registerLoaders(loaders: string[] | undefined) {
+    if (!loaders?.length) return;
+
+    const module = await import('module');
+
+    if (!('register' in module)) {
+        console.error('Module loader registration is not supported by the current version of Node.js');
+        return;
+    }
+
+    const register = module.register as (loader: string, cwd: URL) => void;
+
+    function registerLoader(loader: string) {
+        register(loader, cwdUrl);
+    }
+
+    loaders.forEach(registerLoader);
 }
 
 run(process.argv.slice(2));

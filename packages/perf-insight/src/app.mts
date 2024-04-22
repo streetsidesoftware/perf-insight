@@ -10,8 +10,11 @@ interface AppOptions {
     repeat?: number;
     timeout?: number;
     all?: boolean;
+    file?: string[];
+    exclude?: string[];
     suite?: string[];
     test?: string[];
+    register?: string[];
 }
 
 const urlRunnerCli = new URL('./runBenchmarkCli.mjs', import.meta.url).toString();
@@ -24,32 +27,40 @@ export async function app(program = defaultCommand): Promise<Command> {
     program
         .name('perf-insight')
         .addArgument(argument)
-        .description('Benchmark performance suites.')
+        .description('Benchmark performance suites found in `**/*.perf.{js,cjs,mjs}`.')
         .option('-a, --all', 'Run all perf files.', false)
+        .option('-f, --file <glob...>', 'Globs to search for perf files.', appendValue)
+        .option('-x, --exclude <glob...>', 'Globs to exclude from search.', appendValue)
         .option('-t, --timeout <timeout>', 'Override the timeout for each test suite.', (v) => Number(v))
-        .option('-s, --suite <suite...>', 'Run only matching suites.', (v, a: string[] | undefined) =>
-            (a || []).concat(v),
-        )
-        .option('-T, --test <test...>', 'Run only matching test found in suites', (v, a: string[] | undefined) =>
-            (a || []).concat(v),
-        )
+        .option('-s, --suite <suite...>', 'Run only matching suites.', appendValue)
+        .option('-T, --test <test...>', 'Run only matching test found in suites', appendValue)
         .option('--repeat <count>', 'Repeat the tests.', (v) => Number(v), 1)
+        .option('--register <loader>', 'Register a module loader. (e.g. ts-node/esm)', appendValue)
         .action(async (suiteNamesToRun: string[], options: AppOptions, command: Command) => {
-            if (!suiteNamesToRun.length && !options.all) {
+            if (!suiteNamesToRun.length && !(options.all || options.file?.length)) {
                 console.error(chalk.red('No tests to run.'));
                 console.error(chalk.yellow(`Use ${chalk.green('--all')} to run all tests.\n`));
                 command.help();
             }
 
             // console.log('%o', options);
+            const fileGlobs = options.file?.length ? options.file : ['**/*.perf.{js,mjs,cjs}'];
+            const excludes = options.exclude?.length ? options.exclude : [];
 
-            const found = await findFiles(['**/*.perf.{js,mjs,cjs}', '!**/node_modules/**']);
+            const found = await findFiles([...fileGlobs, '!**/node_modules/**'], { excludes });
+
+            if (!found.length) {
+                console.error(chalk.red('No perf files found.'));
+                return;
+            }
 
             const files = found.filter(
                 (file) =>
                     !suiteNamesToRun.length ||
                     suiteNamesToRun.some((name) => file.toLowerCase().includes(name.toLowerCase())),
             );
+
+            console.log('%o', files);
 
             await spawnRunners(files, options);
 
@@ -79,6 +90,10 @@ async function spawnRunners(files: string[], options: AppOptions): Promise<void>
 
     if (options.test?.length) {
         cliOptions.push(...options.test.flatMap((t) => ['--test', t]));
+    }
+
+    if (options.register?.length) {
+        cliOptions.push(...options.register.flatMap((r) => ['--register', r]));
     }
 
     for (const file of files) {
@@ -125,4 +140,9 @@ function spawnRunner(args: string[]): Promise<number | undefined> {
 export async function run(argv?: string[], program?: Command): Promise<void> {
     const prog = await app(program);
     await prog.parseAsync(argv);
+}
+
+function appendValue(v: string, prev: string[] | undefined): string[] {
+    if (!prev) return [v];
+    return [...prev, v];
 }
