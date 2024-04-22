@@ -85,11 +85,11 @@ suite('map', 'Measure .map performance with different functions', async (test) =
 File: examples/dist/exampleMap.perf.mjs
 Running Perf Suite: map
 Measure .map performance with different functions
-✔ map((a) => a.length)              28560.04 ops/sec  14016 iterations  490.76ms time
-✔ .map((a) => { return a.length; }) 16871.89 ops/sec   8336 iterations  494.08ms time
-✔ .map(Boolean)                      7359.97 ops/sec   3656 iterations  496.74ms time
-✔ .map((a) => !a.length)            13735.05 ops/sec   6812 iterations  495.96ms time
-✔ .map((a) => { return a.length; }) 17403.23 ops/sec   8622 iterations  495.43ms time
+✔ map((a) => a.length)              27203.18 ops/sec  13352 iterations  490.82ms time
+✔ .map((a) => { return a.length; }) 15047.53 ops/sec   7437 iterations  494.23ms time
+✔ .map(Boolean)                      7700.32 ops/sec   3827 iterations  496.99ms time
+✔ .map((a) => !a.length)            11501.15 ops/sec   5700 iterations  495.60ms time
+✔ .map((a) => { return a.length; }) 16183.73 ops/sec   8018 iterations  495.44ms time
 done.
 ```
 
