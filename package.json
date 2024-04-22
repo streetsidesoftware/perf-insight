@@ -37,9 +37,9 @@
     "url": "https://github.com/streetsidesoftware"
   },
   "bugs": {
-    "url": "https://github.com/streetsidesoftware/template-typescript-cli-app/issues"
+    "url": "https://github.com/streetsidesoftware/perf-bench/issues"
   },
-  "homepage": "https://github.com/streetsidesoftware/template-typescript-cli-app#readme",
+  "homepage": "https://github.com/streetsidesoftware/perf-bench#readme",
   "license": "MIT",
   "devDependencies": {
     "@eslint/eslintrc": "^3.0.2",
