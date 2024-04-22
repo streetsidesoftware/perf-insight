@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/streetsidesoftware/perf-insight/compare/perf-insight-repo-1.0.3...perf-insight-repo-1.1.0) (2024-04-22)
+
+
+### Features
+
+* Support node loaders ([#17](https://github.com/streetsidesoftware/perf-insight/issues/17)) ([1fa6010](https://github.com/streetsidesoftware/perf-insight/commit/1fa60101f0acd8270d780db440f4231971c3ba5d))
+
 ## [1.0.3](https://github.com/streetsidesoftware/perf-insight/compare/perf-insight-repo-1.0.2...perf-insight-repo-1.0.3) (2024-04-22)
 
 
