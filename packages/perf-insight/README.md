@@ -81,12 +81,22 @@ suite('map', 'Measure .map performance with different functions', async (test) =
 File: examples/dist/exampleMap.perf.mjs
 Running Perf Suite: map
 Measure .map performance with different functions
-✔ map((a) => a.length)              28825.09 ops/sec  14142 iterations  490.61ms time
-✔ .map((a) => { return a.length; }) 18678.29 ops/sec   9226 iterations  493.94ms time
-✔ .map(Boolean)                      7589.80 ops/sec   3771 iterations  496.85ms time
-✔ .map((a) => !a.length)            15447.51 ops/sec   7659 iterations  495.81ms time
-✔ .map((a) => { return a.length; }) 17187.44 ops/sec   8520 iterations  495.71ms time
+✔ map((a) => a.length)              24059.07 ops/sec  11792 iterations  490.13ms time
+✔ .map((a) => { return a.length; }) 13708.22 ops/sec   6778 iterations  494.45ms time
+✔ .map(Boolean)                      7407.73 ops/sec   3682 iterations  497.05ms time
+✔ .map((a) => !a.length)            13040.03 ops/sec   6469 iterations  496.09ms time
+✔ .map((a) => { return a.length; }) 11657.43 ops/sec   5774 iterations  495.31ms time
 done.
+```
+
+## TypeScript Support
+
+It is necessary to register a TypeScript loader like [ts-node](https://typestrong.org/ts-node/).
+
+**Usage:**
+
+```
+npx perf-insight --file "**/*.perf.mts" --timeout 500 --register ts-node/esm
 ```
 
 <!--- @@inject-end: ../../README.md --->
