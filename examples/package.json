@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsc -p .",
     "watch": "tsc -p . --watch",
-    "test": "perf-bench trie --suite search",
+    "test": "perf-bench example --suite map -t 500",
     "prepare": "pnpm build"
   },
   "author": {

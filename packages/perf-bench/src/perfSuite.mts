@@ -59,11 +59,13 @@ export interface RunnerContext {
 
     timeout: number;
     /**
-     * Set the amount of time to run the test.
+     * Sets the timeout for all tests in the suite.
      * @param timeoutMs - The amount of time in milliseconds to run the test.
      */
     setTimeout: (timeoutMs: number) => void;
 }
+
+export interface PerfTest extends PerfTestFn, Omit<RunnerContext, 'test'> {}
 
 export interface TestResult {
     name: string;
@@ -113,7 +115,7 @@ interface ProgressReporting {
     spinner?: Ora;
 }
 
-export type SuiteFn = (test: PerfTestFn, context: RunnerContext) => void | Promise<void>;
+export type SuiteFn = (test: PerfTest, context: RunnerContext) => void | Promise<void>;
 
 const defaultTime = 500; // 1/2 second
 
@@ -451,7 +453,7 @@ async function runTests(
         }
     }
 
-    await suite.suiteFn(context.test, context);
+    await suite.suiteFn(createPerfTestFn(context), context);
 
     nameWidth = Math.max(...tests.map((t) => t.name.length));
 
@@ -472,4 +474,11 @@ async function runTests(
         description,
         results,
     };
+}
+
+function createPerfTestFn(context: RunnerContext): PerfTest {
+    const { test, ...restContext } = context;
+    const perfTestFn = ((...params) => test(...params)) as PerfTest;
+    Object.assign(perfTestFn, restContext);
+    return perfTestFn;
 }

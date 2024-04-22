@@ -44,7 +44,9 @@ export async function app(program = defaultCommand): Promise<Command> {
             const found = await findFiles(['**/*.perf.{js,mjs,cjs}', '!**/node_modules/**']);
 
             const files = found.filter(
-                (file) => !suiteNamesToRun.length || suiteNamesToRun.some((name) => file.includes(name)),
+                (file) =>
+                    !suiteNamesToRun.length ||
+                    suiteNamesToRun.some((name) => file.toLowerCase().includes(name.toLowerCase())),
             );
 
             await spawnRunners(files, options);

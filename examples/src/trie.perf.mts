@@ -7,7 +7,7 @@ import { suite } from 'perf-bench';
 import { SimpleTrie } from './lib/SimpleTrie.mjs';
 import { Trie } from './lib/Trie.mjs';
 
-const wordsUrl = new URL('../../../ngram/1-gram.tsv', import.meta.url);
+const wordsUrl = new URL('../../ngram/1-gram.tsv', import.meta.url);
 
 let words: string[] | undefined = undefined;
 
