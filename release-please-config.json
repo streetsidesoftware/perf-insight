@@ -1,7 +1,11 @@
 {
-    "include-component-in-tag": false,
+    "include-component-in-tag": true,
     "include-v-in-tag": false,
     "packages": {
+        ".": {
+            "component": "perf-insight-repo",
+            "releaseType": "node"
+        },
         "packages/perf-insight": {
             "component": "perf-insight",
             "releaseType": "node"
