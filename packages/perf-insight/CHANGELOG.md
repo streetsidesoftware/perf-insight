@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/streetsidesoftware/perf-insight/compare/1.0.2...1.0.3) (2024-04-22)
+
+
+### Bug Fixes
+
+* Update README.md ([f38a315](https://github.com/streetsidesoftware/perf-insight/commit/f38a315f262d87c27befe729efb9115da9ddb5dc))
+
 ## [1.0.2](https://github.com/streetsidesoftware/perf-insight/compare/1.0.1...1.0.2) (2024-04-22)
 
 
