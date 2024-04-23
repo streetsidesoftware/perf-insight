@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/streetsidesoftware/perf-insight/compare/perf-insight-repo-1.1.0...perf-insight-repo-1.1.1) (2024-04-23)
+
+
+### Bug Fixes
+
+* improve error reporting ([#19](https://github.com/streetsidesoftware/perf-insight/issues/19)) ([ac563c4](https://github.com/streetsidesoftware/perf-insight/commit/ac563c4e011fc86000074f46a0b453c1cc47b123))
+
 ## [1.1.0](https://github.com/streetsidesoftware/perf-insight/compare/perf-insight-repo-1.0.3...perf-insight-repo-1.1.0) (2024-04-22)
 
 
