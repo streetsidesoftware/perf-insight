@@ -39,8 +39,10 @@ async function run(args: string[]) {
         const url = new URL(file, cwdUrl).toString();
         try {
             await import(url);
-        } catch (_) {
-            errors.push(new Error(`Failed to import file: ${file}`));
+        } catch (e) {
+            const err = new Error(`Failed to import file: ${file}`);
+            err.cause = e;
+            errors.push(err);
         }
     }
 
@@ -49,7 +51,7 @@ async function run(args: string[]) {
 
     if (errors.length) {
         console.error('Errors:');
-        errors.forEach((err) => console.error(err.message));
+        errors.forEach((err) => console.error('- %s\n%o', err.message, err.cause));
         process.exitCode = 1;
         return;
     }
