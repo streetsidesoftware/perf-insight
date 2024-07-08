@@ -27,8 +27,8 @@ importers:
         specifier: ^8.9.1
         version: 8.9.1
       cspell-trie-lib:
-        specifier: ^8.9.1
-        version: 8.9.1
+        specifier: ^8.10.4
+        version: 8.10.4
       eslint:
         specifier: ^9.6.0
         version: 9.6.0
@@ -84,8 +84,8 @@ importers:
   examples:
     dependencies:
       cspell-trie-lib:
-        specifier: ^8.9.1
-        version: 8.9.1
+        specifier: ^8.10.4
+        version: 8.10.4
       lorem-ipsum:
         specifier: ^2.0.8
         version: 2.0.8
@@ -221,9 +221,14 @@ packages:
       '@cspell/cspell-types': 8.9.1
     dev: true
 
+  /@cspell/cspell-pipe@8.10.4:
+    resolution: {integrity: sha512-yN+A9EIgdSkNiQnrFgsy5dzFl879ddMRHw/u38Zw4HdHIGr+xLpw5UVSKK6OacPMro853engM3dTJJDzRzh+rA==}
+    engines: {node: '>=18'}
+
   /@cspell/cspell-pipe@8.9.1:
     resolution: {integrity: sha512-wH5Xu8W3aMEWFSpOczMtH/04clLMfDGdbYMYB7w6BeHI/LDW8DZaRhigOOhx9FRgVk/YIVbKKAKVgvFrfD5cEA==}
     engines: {node: '>=18'}
+    dev: true
 
   /@cspell/cspell-resolver@8.9.1:
     resolution: {integrity: sha512-Q2SOnIi2dnQ2zqPd+tcEYfom9qlsapGyLK4Mdx2Vv29MU2RDZ9VHFDncV6yo6O58gmlYl8sXtJsVceiHgwwlkQ==}
@@ -237,9 +242,14 @@ packages:
     engines: {node: '>=18'}
     dev: true
 
+  /@cspell/cspell-types@8.10.4:
+    resolution: {integrity: sha512-K/7JALR417KYHoovk18LTJCnKXF8ToNraWX4P3NFkYZNffc62fPn0y7nV9kphdK/biLM7np9gWtHq22MhX4qgw==}
+    engines: {node: '>=18'}
+
   /@cspell/cspell-types@8.9.1:
     resolution: {integrity: sha512-Z/pTX2i+U5KwyCYRSw8BleJtw81jFifv91DDka4nqi2oyHJ3eEUljVovNOuZ3lotn/ArHdu4rY98s1w6Z69mYw==}
     engines: {node: '>=18'}
+    dev: true
 
   /@cspell/dict-ada@4.0.2:
     resolution: {integrity: sha512-0kENOWQeHjUlfyId/aCM/mKXtkEgV0Zu2RhUXCBr4hHo9F9vph+Uu8Ww2b0i5a4ZixoIkudGA+eJvyxrG1jUpA==}
@@ -1645,6 +1655,14 @@ packages:
       xdg-basedir: 5.1.0
     dev: true
 
+  /cspell-trie-lib@8.10.4:
+    resolution: {integrity: sha512-PQDwEYI10sp9nwnUA8HFFZr1c5j1Zrk9p8oqk7KUy+QUF3XcJn3ayLenPNUG95U/ysg3RBHc7/Vmh7unvXNRlQ==}
+    engines: {node: '>=18'}
+    dependencies:
+      '@cspell/cspell-pipe': 8.10.4
+      '@cspell/cspell-types': 8.10.4
+      gensequence: 7.0.0
+
   /cspell-trie-lib@8.9.1:
     resolution: {integrity: sha512-rUED/lNlFcsRfkMal6+zLz7JW3/cV79KGhwxnwu1fjNS0nlLSAUGTTiAQBQSR+pU/UW+BTkmULHVuNh+DUN93w==}
     engines: {node: '>=18'}
@@ -1652,6 +1670,7 @@ packages:
       '@cspell/cspell-pipe': 8.9.1
       '@cspell/cspell-types': 8.9.1
       gensequence: 7.0.0
+    dev: true
 
   /cspell@8.9.1:
     resolution: {integrity: sha512-tNUITJbyeX/JnhBtMtbZ5hDbkNIHB72iQx3Uw51sWvo8YmIhaP6ma1W8PPNteu8CSlI7r8Z412wpjyR0Mnsr6A==}
