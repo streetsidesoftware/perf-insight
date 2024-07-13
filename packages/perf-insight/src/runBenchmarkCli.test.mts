@@ -13,6 +13,9 @@ describe('runBenchmarkCli', () => {
         const r = new URL(root, import.meta.url).href;
         const fileUrl = new URL(file, r).href;
 
-        await expect(run([fileUrl, '--root', r, ...args])).resolves.toEqual({ error: expect.any(Error) });
+        await expect(run([fileUrl, '--root', r, ...args])).resolves.toEqual({
+            error: undefined,
+            hadFailures: true,
+        });
     });
 });
