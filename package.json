@@ -4,14 +4,16 @@
   "description": "Example command line tool.",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@8.15.7",
+  "packageManager": "pnpm@9.4.0",
   "engines": {
-    "node": ">=18.11.0"
+    "node": ">=18.18.0"
   },
   "bin": {
     "bin": "./bin.mjs"
   },
   "scripts": {
+    "ib": "pnpm i && pnpm build",
+    "ibt": "pnpm ib && pnpm test",
     "build": "pnpm -r --stream --workspace-concurrency=2 run build",
     "watch": "cd packages/perf-insight && pnpm run watch",
     "build:readme": "pnpm build && pnpm build:readme:help && pnpm build:readme:example && pnpm build:readme:inject && prettier -w \"**/README.md\"",
