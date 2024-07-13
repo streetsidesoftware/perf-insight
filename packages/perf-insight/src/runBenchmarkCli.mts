@@ -9,9 +9,16 @@ import { parseArgs } from 'node:util';
 
 import { runBenchmarkSuites } from './run.mjs';
 
-const cwdUrl = pathToFileURL(process.cwd() + '/');
+interface RunResult {
+    error?: Error;
+    /**
+     * Indicates if there were any failures in the benchmark suites.
+     * This is not an error, since nothing went wrong in the insight code.
+     */
+    hadFailures: boolean;
+}
 
-async function run(args: string[]) {
+export async function run(args: string[]): Promise<RunResult> {
     const parseConfig = {
         args,
         strict: true,
@@ -22,16 +29,18 @@ async function run(args: string[]) {
             test: { type: 'string', short: 'T', multiple: true },
             suite: { type: 'string', short: 'S', multiple: true },
             register: { type: 'string', multiple: true },
+            root: { type: 'string' },
         },
     } as const satisfies ParseArgsConfig;
 
     const parsed = parseArgs(parseConfig);
+    const cwdUrl = parsed.values.root ? new URL(parsed.values.root) : pathToFileURL(process.cwd() + '/');
 
     const repeat = Number(parsed.values['repeat'] || '0') || undefined;
     const timeout = Number(parsed.values['timeout'] || '0') || undefined;
     const tests = parsed.values['test'];
     const suites = parsed.values['suite'];
-    await registerLoaders(parsed.values['register']);
+    await registerLoaders(parsed.values['register'], cwdUrl);
 
     const errors: Error[] = [];
 
@@ -54,13 +63,21 @@ async function run(args: string[]) {
         console.error('Errors:');
         errors.forEach((err) => console.error('- %s\n%o', err.message, err.cause));
         process.exitCode = 1;
-        return;
+        return { error: errors[0], hadFailures: true };
     }
 
-    await runBenchmarkSuites(undefined, { repeat, timeout, tests, suites });
+    try {
+        const r = await runBenchmarkSuites(undefined, { repeat, timeout, tests, suites });
+        process.exitCode = process.exitCode || (r.hadFailures ? 1 : 0);
+        return { error: errors[0], hadFailures: r.hadFailures };
+    } catch (e) {
+        // console.error('Failed to run benchmark suites.', e);
+        process.exitCode = 1;
+        return { error: e as Error, hadFailures: true };
+    }
 }
 
-async function registerLoaders(loaders: string[] | undefined) {
+async function registerLoaders(loaders: string[] | undefined, cwdUrl: URL) {
     if (!loaders?.length) return;
 
     const module = await import('module');
@@ -79,4 +96,10 @@ async function registerLoaders(loaders: string[] | undefined) {
     loaders.forEach(registerLoader);
 }
 
-run(process.argv.slice(2));
+// console.error('args: %o', process.argv);
+
+if ((process.argv[1] ?? '').endsWith('runBenchmarkCli.mjs')) {
+    run(process.argv.slice(2)).then((result) => {
+        if (result.error) process.exitCode = 1;
+    });
+}
