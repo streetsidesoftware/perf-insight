@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/streetsidesoftware/perf-insight/compare/1.1.1...1.2.0) (2024-07-13)
+
+
+### Features
+
+* Exit with 1 if a test failed ([#58](https://github.com/streetsidesoftware/perf-insight/issues/58)) ([b7d8519](https://github.com/streetsidesoftware/perf-insight/commit/b7d85194d0f3614e7a831ac7c937461b096649a6))
+
 ## [1.1.1](https://github.com/streetsidesoftware/perf-insight/compare/1.1.0...1.1.1) (2024-04-23)
 
 
