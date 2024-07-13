@@ -96,6 +96,7 @@ export interface RunnerResult {
     name: string;
     description: string | undefined;
     results: TestResult[];
+    hadFailures: boolean;
 }
 
 type TestMethod = () => void | Promise<void> | unknown | Promise<unknown>;
@@ -473,6 +474,7 @@ async function runTests(
         name,
         description,
         results,
+        hadFailures: results.some((r) => !!r.error),
     };
 }
 

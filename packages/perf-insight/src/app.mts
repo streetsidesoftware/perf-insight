@@ -15,6 +15,7 @@ interface AppOptions {
     suite?: string[];
     test?: string[];
     register?: string[];
+    failFast?: boolean;
 }
 
 const urlRunnerCli = new URL('./runBenchmarkCli.mjs', import.meta.url).toString();
@@ -34,6 +35,7 @@ export async function app(program = defaultCommand): Promise<Command> {
         .option('-t, --timeout <timeout>', 'Override the timeout for each test suite.', (v) => Number(v))
         .option('-s, --suite <suite...>', 'Run only matching suites.', appendValue)
         .option('-T, --test <test...>', 'Run only matching test found in suites', appendValue)
+        .option('--fail-fast', 'Stop on first failure.', false)
         .option('--repeat <count>', 'Repeat the tests.', (v) => Number(v), 1)
         .option('--register <loader>', 'Register a module loader. (e.g. ts-node/esm)', appendValue)
         .action(async (suiteNamesToRun: string[], options: AppOptions, command: Command) => {
@@ -62,7 +64,7 @@ export async function app(program = defaultCommand): Promise<Command> {
 
             await spawnRunners(files, options);
 
-            console.log(chalk.green('done.'));
+            process.exitCode ? console.log(chalk.red('failed.')) : console.log(chalk.green('done.'));
         });
 
     program.showHelpAfterError();
@@ -97,9 +99,16 @@ async function spawnRunners(files: string[], options: AppOptions): Promise<void>
     for (const file of files) {
         try {
             const code = await spawnRunner([file, ...cliOptions]);
-            code && console.error('Runner failed with "%s" code: %d', file, code);
+            if (code) {
+                // console.error('Runner failed with "%s" code: %d', file, code);
+                process.exitCode ??= code;
+                if (options.failFast) {
+                    break;
+                }
+            }
         } catch (e) {
             console.error('Failed to spawn runner.', e);
+            process.exitCode ??= 1;
         }
     }
 }

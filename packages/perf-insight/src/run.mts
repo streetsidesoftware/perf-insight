@@ -11,22 +11,33 @@ export interface RunOptions {
     tests?: string[] | undefined;
 }
 
+export interface RunBenchmarkSuitesResult {
+    hadFailures: boolean;
+    numSuitesRun: number;
+}
+
 /**
  *
  * @param suiteNames
  * @param options
  */
-export async function runBenchmarkSuites(suiteToRun?: (string | PerfSuite)[], options?: RunOptions) {
+export async function runBenchmarkSuites(
+    suiteToRun?: (string | PerfSuite)[],
+    options?: RunOptions,
+): Promise<RunBenchmarkSuitesResult> {
     const suites = getActiveSuites();
 
     let numSuitesRun = 0;
     let showRepeatMsg = false;
+    let hadErrors = false;
 
     for (let repeat = options?.repeat || 1; repeat > 0; repeat--) {
         if (showRepeatMsg) {
             console.log(chalk.yellow(`Repeating tests: ${repeat} more time${repeat > 1 ? 's' : ''}.`));
         }
-        numSuitesRun = await runTestSuites(suites, suiteToRun || suites, options || {});
+        const r = await runTestSuites(suites, suiteToRun || suites, options || {});
+        numSuitesRun = r.numSuitesRun;
+        hadErrors ||= r.hadFailures;
         if (!numSuitesRun) break;
         showRepeatMsg = true;
     }
@@ -44,18 +55,32 @@ export async function runBenchmarkSuites(suiteToRun?: (string | PerfSuite)[], op
                 .map((line) => `  ${line}`)
                 .join('\n'),
         );
+
+        hadErrors = true;
     }
+
+    return { hadFailures: hadErrors, numSuitesRun };
+}
+
+interface Result {
+    hadFailures: boolean;
+}
+
+interface RunTestSuitesResults extends Result {
+    numSuitesRun: number;
 }
 
 async function runTestSuites(
     suites: PerfSuite[],
     suitesToRun: (string | PerfSuite)[],
     options: RunOptions,
-): Promise<number> {
+): Promise<RunTestSuitesResults> {
     const timeout = options.timeout || undefined;
     const suitesRun = new Set<PerfSuite>();
+    let hadFailures = false;
 
-    async function _runSuite(suites: PerfSuite[]) {
+    async function _runSuite(suites: PerfSuite[]): Promise<Result> {
+        let hadFailures = false;
         for (const suite of suites) {
             if (suitesRun.has(suite)) continue;
             if (!filterSuite(suite)) {
@@ -64,32 +89,36 @@ async function runTestSuites(
             }
             suitesRun.add(suite);
             console.log(chalk.green(`Running Perf Suite: ${suite.name}`));
-            await suite.setTimeout(timeout).runTests({ tests: options.tests });
+            const result = await suite.setTimeout(timeout).runTests({ tests: options.tests });
+            if (result.hadFailures) {
+                hadFailures = true;
+            }
         }
+
+        return { hadFailures: hadFailures };
     }
 
-    async function runSuite(name: string | PerfSuite) {
+    async function runSuite(name: string | PerfSuite): Promise<Result> {
         if (typeof name !== 'string') {
             return await _runSuite([name]);
         }
 
         if (name === 'all') {
-            await _runSuite(suites);
-            return;
+            return await _runSuite(suites);
         }
         const matching = suites.filter((suite) => suite.name.toLowerCase().startsWith(name.toLowerCase()));
         if (!matching.length) {
             console.log(chalk.red(`Unknown test method: ${name}`));
-            return;
+            return { hadFailures: true };
         }
-        await _runSuite(matching);
+        return await _runSuite(matching);
     }
 
     for (const name of suitesToRun) {
-        await runSuite(name);
+        hadFailures ||= (await runSuite(name)).hadFailures;
     }
 
-    return suitesRun.size;
+    return { hadFailures, numSuitesRun: suitesRun.size };
 
     function filterSuite(suite: PerfSuite): boolean {
         const { suites } = options;
