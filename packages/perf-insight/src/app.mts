@@ -64,7 +64,7 @@ export async function app(program = defaultCommand): Promise<Command> {
 
             await spawnRunners(files, options);
 
-            process.exitCode ? console.log(chalk.red('failed.')) : console.log(chalk.green('done.'));
+            return process.exitCode ? console.log(chalk.red('failed.')) : console.log(chalk.green('done.'));
         });
 
     program.showHelpAfterError();
@@ -127,8 +127,8 @@ function spawnRunner(args: string[]): Promise<number | undefined> {
             if (completed) return;
             clearTimeout(timeout);
             completed = true;
-            process.connected && process.disconnect();
-            error ? reject(error) : resolve(exitCode);
+            if (process.connected) process.disconnect();
+            return error ? reject(error) : resolve(exitCode);
         }
 
         process.on('error', (err) => {

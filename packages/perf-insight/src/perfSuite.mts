@@ -269,11 +269,7 @@ async function runTests(
             }
         }
     };
-    const reportTestIteration =
-        progress?.testIteration ??
-        (() => {
-            spinner.isSpinning && spinner.render();
-        });
+    const reportTestIteration = progress?.testIteration ?? (() => spinner.isSpinning && spinner.render());
 
     const context: RunnerContext = {
         test,
@@ -304,7 +300,7 @@ async function runTests(
     }
 
     function addTest(test: TestDefinition) {
-        filterTest(test.name) && tests.push(test);
+        if (filterTest(test.name)) tests.push(test);
     }
 
     function test(name: string, method: () => void, timeout?: number): void {
