@@ -24,8 +24,8 @@ importers:
         specifier: ^8.15.1
         version: 8.15.1
       cspell-trie-lib:
-        specifier: ^8.15.1
-        version: 8.15.1
+        specifier: ^8.15.2
+        version: 8.15.2
       eslint:
         specifier: ^9.12.0
         version: 9.12.0
@@ -69,8 +69,8 @@ importers:
   examples:
     dependencies:
       cspell-trie-lib:
-        specifier: ^8.15.1
-        version: 8.15.1
+        specifier: ^8.15.2
+        version: 8.15.2
       lorem-ipsum:
         specifier: ^2.0.8
         version: 2.0.8
@@ -138,6 +138,10 @@ packages:
     resolution: {integrity: sha512-euErNW69K6+rCirGtORbgapcNtvlObTlO7SHftRRjGbvMh1F5J1rEc+KwW3qhM5H73NSwFrQwR5KzWrUrGimog==}
     engines: {node: '>=18'}
 
+  '@cspell/cspell-pipe@8.15.2':
+    resolution: {integrity: sha512-TOcLiRiUSh75y+DQrAW59Ix0/D9WPrd4/KPtUShUepS3vLfoxMQ+TwpXfdc8FrzU73Hg5glXXnQjvdx7vAazVQ==}
+    engines: {node: '>=18'}
+
   '@cspell/cspell-resolver@8.15.1':
     resolution: {integrity: sha512-9GVRSZKLc7P4S1aOzBiyXbtVMu3yeDHpp/sAeKd7Z869T2ddvMrmQoOTRBmKW90PNP2j4aQkPebPJe85GnOf+A==}
     engines: {node: '>=18'}
@@ -148,6 +152,10 @@ packages:
 
   '@cspell/cspell-types@8.15.1':
     resolution: {integrity: sha512-6QY0147RmiXIpTMkwI7a6dx+/CtPserPxxsK2p0DFf4bTHOGExx3dlPg7eGL8UFO0/C/nrXPAMy5kZEstPclXA==}
+    engines: {node: '>=18'}
+
+  '@cspell/cspell-types@8.15.2':
+    resolution: {integrity: sha512-bHAkXsrfOhKyZZ+TA5eGH3fqh9DPcP3a2v+ozTnhhZa3zcfuzX7rZnYWEFA8LELMUStWXLECzFoGd9QUEHMstg==}
     engines: {node: '>=18'}
 
   '@cspell/dict-ada@4.0.5':
@@ -980,6 +988,10 @@ packages:
 
   cspell-trie-lib@8.15.1:
     resolution: {integrity: sha512-/m7GYH2ICictHt4cpuXQDMtcLDnfj3Picc/uV87n1JQPiB1lHyu4IawhaZB5nRS5cZgYab4wQKKVD8dLbwWXHQ==}
+    engines: {node: '>=18'}
+
+  cspell-trie-lib@8.15.2:
+    resolution: {integrity: sha512-dqEc4832iareVCA+pXuvdNwtUF+F8S+w15Tlv0fRdPTz8X4wcUtK0R5npYnL5dyuPhKBdO/PmKXGb7/5I0vBMg==}
     engines: {node: '>=18'}
 
   cspell@8.15.1:
@@ -2158,6 +2170,8 @@ snapshots:
 
   '@cspell/cspell-pipe@8.15.1': {}
 
+  '@cspell/cspell-pipe@8.15.2': {}
+
   '@cspell/cspell-resolver@8.15.1':
     dependencies:
       global-directory: 4.0.1
@@ -2165,6 +2179,8 @@ snapshots:
   '@cspell/cspell-service-bus@8.15.1': {}
 
   '@cspell/cspell-types@8.15.1': {}
+
+  '@cspell/cspell-types@8.15.2': {}
 
   '@cspell/dict-ada@4.0.5': {}
 
@@ -2890,6 +2906,12 @@ snapshots:
     dependencies:
       '@cspell/cspell-pipe': 8.15.1
       '@cspell/cspell-types': 8.15.1
+      gensequence: 7.0.0
+
+  cspell-trie-lib@8.15.2:
+    dependencies:
+      '@cspell/cspell-pipe': 8.15.2
+      '@cspell/cspell-types': 8.15.2
       gensequence: 7.0.0
 
   cspell@8.15.1:
