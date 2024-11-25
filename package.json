@@ -53,7 +53,7 @@
   "devDependencies": {
     "@eslint/js": "^9.15.0",
     "@tsconfig/node20": "^20.1.4",
-    "@types/node": "^22.9.0",
+    "@types/node": "^22.9.3",
     "@vitest/coverage-v8": "^2.1.5",
     "cspell": "^8.16.0",
     "cspell-trie-lib": "^8.16.0",
