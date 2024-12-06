@@ -46,29 +46,27 @@
   "license": "MIT",
   "pnpm": {
     "overrides": {},
-    "patchedDependencies": {
-      "eslint@9.15.0": "patches/eslint@9.15.0.patch"
-    }
+    "patchedDependencies": {}
   },
   "devDependencies": {
-    "@eslint/js": "^9.15.0",
+    "@eslint/js": "^9.16.0",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^22.10.1",
-    "@vitest/coverage-v8": "^2.1.6",
+    "@vitest/coverage-v8": "^2.1.8",
     "cspell": "^8.16.1",
     "cspell-trie-lib": "^8.16.1",
-    "eslint": "^9.15.0",
+    "eslint": "^9.16.0",
     "eslint-plugin-n": "^17.14.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "globals": "^15.12.0",
+    "globals": "^15.13.0",
     "inject-markdown": "^3.1.4",
     "lorem-ipsum": "^2.0.8",
     "perf-insight": "workspace:*",
-    "prettier": "^3.4.1",
+    "prettier": "^3.4.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
-    "typescript-eslint": "^8.16.0",
+    "typescript-eslint": "^8.17.0",
     "vite": "^5.4.11",
-    "vitest": "^2.1.6"
+    "vitest": "^2.1.8"
   }
 }
