@@ -4,7 +4,7 @@
   "description": "Performance benchmarking tool for NodeJS.",
   "type": "module",
   "engines": {
-    "node": ">=18.18"
+    "node": ">=20.18"
   },
   "bin": {
     "insight": "./bin.mjs",
