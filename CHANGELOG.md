@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/streetsidesoftware/perf-insight/compare/perf-insight-repo-1.2.0...perf-insight-repo-2.0.0) (2025-07-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* Drop support for Node 18 ([#283](https://github.com/streetsidesoftware/perf-insight/issues/283))
+
+### Features
+
+* Drop support for Node 18 ([#283](https://github.com/streetsidesoftware/perf-insight/issues/283)) ([59a35ce](https://github.com/streetsidesoftware/perf-insight/commit/59a35ce92984465841dc5daa3b0ae44d92ead01c))
+
 ## [1.2.0](https://github.com/streetsidesoftware/perf-insight/compare/perf-insight-repo-1.1.1...perf-insight-repo-1.2.0) (2024-07-13)
 
 
