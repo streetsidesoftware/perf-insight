@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "as-table": "^1.0.55",
-    "chalk": "^5.4.1",
+    "chalk": "^5.5.0",
     "commander": "^14.0.0",
     "globby": "^14.1.0",
     "ora": "^8.2.0"
