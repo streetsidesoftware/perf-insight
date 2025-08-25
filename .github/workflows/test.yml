@@ -73,6 +73,6 @@ jobs:
           path-to-lcov: './packages/perf-insight/coverage/lcov.info'
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v3
+        uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00 # v3
         with:
           files: packages/perf-insight/coverage/lcov.info
