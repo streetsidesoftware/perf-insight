@@ -56,7 +56,7 @@
     "cspell": "^9.2.1",
     "cspell-trie-lib": "^9.2.1",
     "eslint": "^9.35.0",
-    "eslint-plugin-n": "^17.23.0",
+    "eslint-plugin-n": "^17.23.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "globals": "^16.4.0",
     "inject-markdown": "^4.0.0",
