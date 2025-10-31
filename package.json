@@ -1,6 +1,6 @@
 {
   "name": "perf-insight-mono",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Example command line tool.",
   "type": "module",
   "private": true,

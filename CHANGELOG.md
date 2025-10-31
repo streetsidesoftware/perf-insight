@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/streetsidesoftware/perf-insight/compare/perf-insight-repo-2.0.0...perf-insight-repo-2.0.1) (2025-10-31)
+
+
+### Bug Fixes
+
+* Use jiti instead of ts-node ([#339](https://github.com/streetsidesoftware/perf-insight/issues/339)) ([f6827f1](https://github.com/streetsidesoftware/perf-insight/commit/f6827f1836e98da0da6d9c0df45119bde2f694f7))
+
 ## [2.0.0](https://github.com/streetsidesoftware/perf-insight/compare/perf-insight-repo-1.2.0...perf-insight-repo-2.0.0) (2025-07-05)
 
 
