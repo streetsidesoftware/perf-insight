@@ -27,7 +27,6 @@ jobs:
           - os: macos-latest
             node-version: 24.x
 
-
     steps:
       - uses: actions/checkout@v5
 
@@ -38,7 +37,6 @@ jobs:
 
       - name: Install - Build - Test
         uses: ./.github/actions/install-build-test
-
 
   coverage:
     permissions:

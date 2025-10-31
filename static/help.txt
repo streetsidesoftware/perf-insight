@@ -12,6 +12,7 @@ Options:
   -t, --timeout <timeout>  Override the timeout for each test suite.
   -s, --suite <suite...>   Run only matching suites.
   -T, --test <test...>     Run only matching test found in suites
+  --fail-fast              Stop on first failure. (default: false)
   --repeat <count>         Repeat the tests. (default: 1)
-  --register <loader>      Register a module loader. (e.g. ts-node/esm)
+  --register <loader>      Register a module loader. (e.g. jiti/register)
   -h, --help               display help for command
