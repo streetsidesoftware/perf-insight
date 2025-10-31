@@ -22,6 +22,7 @@
     "build:readme:inject": "inject-markdown  README.md \"packages/*/README.md\"",
     "coverage": "pnpm -r --stream --workspace-concurrency=2 run coverage",
     "test": "pnpm -r --stream --workspace-concurrency=2 run test",
+    "test:register": "pnpm -r --stream --workspace-concurrency=2 run test:register",
     "lint": "pnpm eslint:check && pnpm prettier:check",
     "lint:fix": "pnpm eslint:fix && pnpm prettier:fix",
     "lint:spell": "cspell . --no-progress",

@@ -10,9 +10,10 @@
   "scripts": {
     "build": "tsc -p .",
     "watch": "tsc -p . --watch",
-    "test": "pnpm test:js && pnpm test:ts",
+    "test": "pnpm test:js",
+    "test:all": "pnpm test:js && pnpm test:register",
     "test:js": "perf-insight example --suite map -t 500",
-    "test:ts": "perf-insight example --suite map -t 500 --register jiti/register --file **/*.perf.mts",
+    "test:register": "perf-insight example --suite map -t 500 --register jiti/register --file **/*.perf.mts",
     "prepare": "pnpm build"
   },
   "author": {
