@@ -46,9 +46,9 @@
   "dependencies": {
     "as-table": "^1.0.55",
     "chalk": "^5.6.2",
-    "commander": "^14.0.2",
+    "commander": "^14.0.3",
     "globby": "^16.1.0",
-    "ora": "^9.0.0"
+    "ora": "^9.3.0"
   },
   "files": [
     "bin.mjs",
