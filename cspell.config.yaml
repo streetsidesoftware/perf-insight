@@ -27,6 +27,7 @@ words:
   - codecov
   - codeql
   - coverallsapp
+  - esbuild
   - lcov
   - ngram
   - pnpm
