@@ -1,0 +1,6 @@
+File: examples/src/lookup.perf.mts
+Running Perf Suite: lookup
+Compare looking up values in an Array and a Set
+✔ Array.includes 492411.14 ops/sec 221603 iterations  450.04ms time
+✔ Set.has        8562719.92 ops/sec 1604731 iterations  187.41ms time
+done.

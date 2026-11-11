@@ -6,7 +6,54 @@ Performance Benchmarking Suite for Node.js, Bun and Deno.
 
 1. `npm i -D perf-insight`
 
-## Getting Started.
+## Getting Started
+
+A perf file holds one or more suites, and each suite holds the tests to compare.
+Create a file whose name ends in `.perf.mts`, such as `lookup.perf.mts`:
+
+<!--- @@inject: examples/src/lookup.perf.mts --->
+
+```typescript
+import { suite } from 'perf-insight';
+
+suite('lookup', 'Compare looking up values in an Array and a Set', async (test) => {
+  const values = Array.from({ length: 1000 }, (_, i) => `value-${i}`);
+  const valueSet = new Set(values);
+  const lookFor = ['value-10', 'value-500', 'value-999', 'missing'];
+
+  test('Array.includes', () => {
+    return lookFor.map((v) => values.includes(v));
+  });
+
+  test('Set.has', () => {
+    return lookFor.map((v) => valueSet.has(v));
+  });
+});
+```
+
+<!--- @@inject-end: examples/src/lookup.perf.mts --->
+
+Run it by passing part of its file name:
+
+**`npx perf-insight lookup --timeout 500`**
+
+Each test runs over and over until its time runs out, here 500 milliseconds.
+The report shows how many times per second each test ran.
+
+<!--- @@inject: static/getting-started.txt --->
+
+```
+File: examples/src/lookup.perf.mts
+Running Perf Suite: lookup
+Compare looking up values in an Array and a Set
+✔ Array.includes 492411.14 ops/sec 221603 iterations  450.04ms time
+✔ Set.has        8562719.92 ops/sec 1604731 iterations  187.41ms time
+done.
+```
+
+<!--- @@inject-end: static/getting-started.txt --->
+
+Use `--all` to run every perf file in the project.
 
 ## CLI Help
 
