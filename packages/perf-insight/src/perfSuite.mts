@@ -1,9 +1,7 @@
 import assert from 'node:assert';
 
-import type { Ora } from 'ora';
-import ora from 'ora';
-
 import { createRunningStdDev, RunningStdDev } from './sd.mjs';
+import { createSpinner } from './spinner.mjs';
 import { stoppedAfterFailure } from './stoppedAfterFailure.mjs';
 
 export type PreparedPerfTestFn<T> = (
@@ -106,15 +104,6 @@ interface TestDefinition {
     name: string;
     prepare: () => TestMethod | Promise<TestMethod>;
     timeout: number | undefined;
-}
-
-interface ProgressReporting {
-    testStart?(name: string): void;
-    testEnd?(result: TestResult): void;
-    testIteration?(name: string, iteration: number, duration: number): void;
-    error?: typeof console.error;
-    stdout?: typeof process.stdout;
-    spinner?: Ora;
 }
 
 export type SuiteFn = (test: PerfTest, context: RunnerContext) => void | Promise<void>;
@@ -244,27 +233,16 @@ class PerfSuiteImpl implements PerfSuite {
     }
 }
 
-async function runTests(
-    suite: PerfSuiteImpl,
-    options: RunTestsOptions | undefined,
-    progress?: ProgressReporting,
-): Promise<RunnerResult> {
-    const stdout = progress?.stdout || process.stdout;
-    const spinner = progress?.spinner || ora({ stream: stdout, discardStdin: false, hideCursor: false });
+async function runTests(suite: PerfSuiteImpl, options: RunTestsOptions | undefined): Promise<RunnerResult> {
+    const stdout = process.stdout;
+    const spinner = createSpinner(stdout);
     const log = (msg: string) => stdout.write(msg + '\n');
     const { name, description } = suite;
 
     let nameWidth = 0;
 
-    const reportTestStart = progress?.testStart ?? ((name: string) => stdout.isTTY && spinner.start(name));
+    const reportTestStart = (name: string) => stdout.isTTY && spinner.start(name);
     const reportTestEnd = (result: TestResult) => {
-        if (progress?.testEnd) {
-            if (spinner.isSpinning) {
-                spinner.stop();
-            }
-            return progress.testEnd(result);
-        }
-
         const msg = formatResult(result, nameWidth);
 
         if (spinner.isSpinning) {
@@ -281,7 +259,6 @@ async function runTests(
             }
         }
     };
-    const reportTestIteration = progress?.testIteration ?? (() => spinner.isSpinning && spinner.render());
 
     const context: RunnerContext = {
         test,
@@ -374,7 +351,7 @@ async function runTests(
         function reportIteration() {
             try {
                 ++iterationCallbacks;
-                reportTestIteration(test.name, iterations, duration);
+                spinner.render();
             } catch (e) {
                 error ??= toError(e);
             }

@@ -1,4 +1,4 @@
-import { stripVTControlCharacters } from 'node:util';
+import { cutText, textWidth } from './text.mjs';
 
 const delimiter = '  ';
 
@@ -25,22 +25,6 @@ export function formatTable(header: string[], rows: (string | undefined)[][], ma
 }
 
 function fit(text: string, width: number): string {
-    const padding = width - textWidth(text);
-    if (padding >= 0) return text + ' '.repeat(padding);
-    return visibleCharacters(text)
-        .slice(0, Math.max(0, width - 1))
-        .join('')
-        .concat('…');
-}
-
-/**
- * The width of `text` on screen, taking each visible character as one column wide.
- * That is too narrow for double-width characters, and too wide for combining marks and emoji sequences.
- */
-function textWidth(text: string): number {
-    return visibleCharacters(text).length;
-}
-
-function visibleCharacters(text: string): string[] {
-    return [...stripVTControlCharacters(text)];
+    const cut = cutText(text, width);
+    return cut + ' '.repeat(Math.max(0, width - textWidth(cut)));
 }
