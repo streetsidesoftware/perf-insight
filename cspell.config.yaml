@@ -24,9 +24,11 @@ dictionaries: []
 words:
   - autobuild
   - buildscript
+  - bunx
   - codecov
   - codeql
   - coverallsapp
+  - denoland
   - esbuild
   - lcov
   - ngram
