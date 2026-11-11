@@ -242,6 +242,17 @@ describe('perfSuite', () => {
         expect(result.overhead).toBeGreaterThanOrEqual(0);
     });
 
+    test('statistics cover every iteration', async () => {
+        const r = await runSuite('statistics', (test) => {
+            // Far shorter than a millisecond, so many iterations run within each one.
+            test('fast', () => undefined, shortTimeout);
+        });
+        const result = r.results[0];
+        expect(result.iterations).toBeGreaterThan(1);
+        expect(result.sd.count).toBe(result.iterations);
+        expect(result.sd.mean).toBe(result.duration / result.iterations);
+    });
+
     test('uses a spinner when stdout is a TTY', async () => {
         const isTTY = process.stdout.isTTY;
         process.stdout.isTTY = true;

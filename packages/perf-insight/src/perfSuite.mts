@@ -1,6 +1,7 @@
 import assert from 'node:assert';
 
-import { createRunningStdDev, RunningStdDev } from './sd.mjs';
+import type { RunningStdDev } from './stats/index.mjs';
+import { createRunningStdDev } from './stats/index.mjs';
 import { stoppedAfterFailure } from './stoppedAfterFailure.mjs';
 import { createSpinner } from './util/index.mjs';
 
@@ -346,8 +347,6 @@ async function runTests(suite: PerfSuiteImpl, options: RunTestsOptions | undefin
         const sd = createRunningStdDev();
         let startTime = performance.now();
 
-        let nextSd = 0;
-
         function reportIteration() {
             ++iterationCallbacks;
             spinner.render();
@@ -373,11 +372,8 @@ async function runTests(suite: PerfSuiteImpl, options: RunTestsOptions | undefin
                 }
                 await runAfterEach();
                 duration += delta;
+                sd.push(delta);
                 const now = performance.now();
-                if (now > nextSd) {
-                    sd.push(delta);
-                    nextSd = performance.now() + 1;
-                }
                 if (now - lastReport > reportInterval) {
                     reportIteration();
                     lastReport = performance.now();
