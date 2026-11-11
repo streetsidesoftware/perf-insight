@@ -24,8 +24,6 @@ jobs:
         include:
           - os: windows-latest
             node-version: 24.x
-          - os: macos-latest
-            node-version: 24.x
 
     steps:
       - uses: actions/checkout@v6
