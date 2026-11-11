@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 
 import { createRunningStdDev } from './sd.mjs';
 
-const urlFixtures = new URL('../../../fixtures/', import.meta.url);
+const urlFixtures = new URL('../../../../fixtures/', import.meta.url);
 
 describe('sd', async () => {
     const sampleData = (await readSampleData()).sort((a, b) => a - b);

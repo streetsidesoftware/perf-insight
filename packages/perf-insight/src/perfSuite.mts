@@ -3,7 +3,8 @@ import assert from 'node:assert';
 import type { Ora } from 'ora';
 import ora from 'ora';
 
-import { createRunningStdDev, RunningStdDev } from './sd.mjs';
+import type { RunningStdDev } from './stats/index.mjs';
+import { createRunningStdDev } from './stats/index.mjs';
 import { stoppedAfterFailure } from './stoppedAfterFailure.mjs';
 
 export type PreparedPerfTestFn<T> = (
