@@ -2,24 +2,22 @@
     "$schema": "https://json.schemastore.org/tsconfig",
     "extends": "@tsconfig/node22",
     "compilerOptions": {
-        "declaration": false,
-        "declarationMap": false,
+        "noEmit": true,
+        "allowImportingTsExtensions": true,
+        "erasableSyntaxOnly": true,
         "exactOptionalPropertyTypes": true,
         "newLine": "LF",
         "noImplicitAny": true,
         "noImplicitThis": true,
         "noUnusedLocals": false,
         "noUnusedParameters": true,
-        "sourceMap": false,
-        "removeComments": false,
         "pretty": true,
         "skipLibCheck": true,
         "strictNullChecks": true,
         "strictFunctionTypes": true,
         "strict": true,
         "types": ["node"],
-        "rootDir": "src",
-        "outDir": "dist"
+        "rootDir": "src"
     },
     "include": ["src"]
 }

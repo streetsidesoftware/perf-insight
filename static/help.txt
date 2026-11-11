@@ -1,6 +1,6 @@
 Usage: perf-insight [options] [filter...]
 
-Benchmark performance suites found in `**/*.perf.{js,cjs,mjs}`.
+Benchmark performance suites found in `**/*.perf.{js,cjs,mjs,ts,mts}`.
 
 Arguments:
   filter                   Perf file filter.
@@ -14,5 +14,5 @@ Options:
   -T, --test <test...>     Run only matching test found in suites
   --fail-fast              Stop on first failure. (default: false)
   --repeat <count>         Repeat the tests. (default: 1)
-  --register <loader>      Register a module loader. (e.g. jiti/register)
+  --register <loader>      Register a module loader.
   -h, --help               display help for command

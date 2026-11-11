@@ -1,14 +1,14 @@
-File: examples/dist/exampleMap.perf.mjs
+File: examples/src/exampleMap.perf.mts
 Running Perf Suite: map
 Measure .map performance with different functions
-✔ map((a) => !!a)                    17922.63 ops/sec   8910 iterations  497.14ms time
-✔ map((a) => a != "")                17113.94 ops/sec   8521 iterations  497.90ms time
-✔ map((a) => a.length)               19090.99 ops/sec   9502 iterations  497.72ms time
-✔ map((a) => !!a.length)             18338.71 ops/sec   9133 iterations  498.02ms time
-✔ .map((a) => { return a.length; })  19056.21 ops/sec   9489 iterations  497.95ms time
-✔ .map(Boolean)                      18051.54 ops/sec   8991 iterations  498.07ms time
-✔ .map((a) => !a.length)             18182.27 ops/sec   9056 iterations  498.07ms time
-✔ .map((a) => { return !a.length; }) 17654.60 ops/sec   8794 iterations  498.11ms time
-✔ .map(function len)                 19423.79 ops/sec   9672 iterations  497.95ms time
-✔ .map(function hasLen)              18287.86 ops/sec   9109 iterations  498.09ms time
+✔ map((a) => !!a)                    18135.52 ops/sec   9010 iterations  496.82ms time
+✔ map((a) => a != "")                17551.15 ops/sec   8733 iterations  497.57ms time
+✔ map((a) => a.length)               19382.93 ops/sec   9641 iterations  497.40ms time
+✔ map((a) => !!a.length)             18259.02 ops/sec   9088 iterations  497.73ms time
+✔ .map((a) => { return a.length; })  19300.85 ops/sec   9604 iterations  497.59ms time
+✔ .map(Boolean)                      18117.39 ops/sec   9018 iterations  497.75ms time
+✔ .map((a) => !a.length)             18088.76 ops/sec   9003 iterations  497.71ms time
+✔ .map((a) => { return !a.length; }) 18236.47 ops/sec   9080 iterations  497.90ms time
+✔ .map(function len)                 19635.27 ops/sec   9772 iterations  497.68ms time
+✔ .map(function hasLen)              18319.66 ops/sec   9121 iterations  497.88ms time
 done.

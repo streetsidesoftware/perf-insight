@@ -28,7 +28,7 @@ export async function app(program = defaultCommand): Promise<Command> {
     program
         .name('perf-insight')
         .addArgument(argument)
-        .description('Benchmark performance suites found in `**/*.perf.{js,cjs,mjs}`.')
+        .description('Benchmark performance suites found in `**/*.perf.{js,cjs,mjs,ts,mts}`.')
         .option('-a, --all', 'Run all perf files.', false)
         .option('-f, --file <glob...>', 'Globs to search for perf files.', appendValue)
         .option('-x, --exclude <glob...>', 'Globs to exclude from search.', appendValue)
@@ -37,7 +37,7 @@ export async function app(program = defaultCommand): Promise<Command> {
         .option('-T, --test <test...>', 'Run only matching test found in suites', appendValue)
         .option('--fail-fast', 'Stop on first failure.', false)
         .option('--repeat <count>', 'Repeat the tests.', (v) => Number(v), 1)
-        .option('--register <loader>', 'Register a module loader. (e.g. jiti/register)', appendValue)
+        .option('--register <loader>', 'Register a module loader.', appendValue)
         .action(async (suiteNamesToRun: string[], options: AppOptions, command: Command) => {
             if (!suiteNamesToRun.length && !(options.all || options.file?.length)) {
                 console.error(chalk.red('No tests to run.'));
@@ -46,7 +46,7 @@ export async function app(program = defaultCommand): Promise<Command> {
             }
 
             // console.log('%o', options);
-            const fileGlobs = options.file?.length ? options.file : ['**/*.perf.{js,mjs,cjs}'];
+            const fileGlobs = options.file?.length ? options.file : ['**/*.perf.{js,mjs,cjs,ts,mts}'];
             const excludes = options.exclude?.length ? options.exclude : [];
 
             const found = await findFiles([...fileGlobs, '!**/node_modules/**'], { excludes });
