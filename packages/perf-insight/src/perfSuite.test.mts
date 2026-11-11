@@ -225,9 +225,10 @@ describe('perfSuite', () => {
         }
         // The spinner colors its symbols when the terminal supports color.
         const text = stripVTControlCharacters(output.join(''));
-        expect(text).toContain('✔ ok');
-        // The spinner marks failures with ✖; plain output uses X.
-        expect(text).toContain('✖ throws');
+        // Its symbols fall back to √ and × where the terminal lacks Unicode, as on Windows.
+        expect(text).toMatch(/[✔√] ok /);
+        // Plain output marks failures with X instead.
+        expect(text).toMatch(/[✖×] throws: /);
         expect(text).not.toContain('X throws');
     });
 });
