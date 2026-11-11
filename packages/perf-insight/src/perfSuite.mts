@@ -349,12 +349,8 @@ async function runTests(suite: PerfSuiteImpl, options: RunTestsOptions | undefin
         let nextSd = 0;
 
         function reportIteration() {
-            try {
-                ++iterationCallbacks;
-                spinner.render();
-            } catch (e) {
-                error ??= toError(e);
-            }
+            ++iterationCallbacks;
+            spinner.render();
         }
 
         try {

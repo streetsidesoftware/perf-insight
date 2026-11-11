@@ -17,7 +17,7 @@ describe('spinner', () => {
     });
 
     test('start erases the line and draws the first frame with the text', () => {
-        const terminal = createTerminal();
+        const terminal = createTerminal(80);
         const spinner = createSpinner(terminal.stream);
         expect(spinner.isSpinning).toBe(false);
 
@@ -29,7 +29,7 @@ describe('spinner', () => {
     });
 
     test('render draws the next frame once the current one has shown for 80 ms', () => {
-        const terminal = createTerminal();
+        const terminal = createTerminal(80);
         const spinner = createSpinner(terminal.stream);
         spinner.start('lookup');
 
@@ -44,7 +44,7 @@ describe('spinner', () => {
     });
 
     test('render returns to the first frame after the last', () => {
-        const terminal = createTerminal();
+        const terminal = createTerminal(80);
         const spinner = createSpinner(terminal.stream);
         spinner.start('x');
         for (let i = 0; i < 10; ++i) {
@@ -55,7 +55,7 @@ describe('spinner', () => {
     });
 
     test('render draws nothing before start', () => {
-        const terminal = createTerminal();
+        const terminal = createTerminal(80);
         createSpinner(terminal.stream).render();
         expect(terminal.written()).toEqual([]);
     });
@@ -65,7 +65,7 @@ describe('spinner', () => {
         ${'succeed'} | ${'✔'}
         ${'fail'}    | ${'✖'}
     `('$method replaces the spinner with a $symbol line', ({ method, symbol }) => {
-        const terminal = createTerminal();
+        const terminal = createTerminal(80);
         const spinner = createSpinner(terminal.stream);
         spinner.start('lookup');
 
@@ -81,7 +81,7 @@ describe('spinner', () => {
     });
 
     test('start begins again at the first frame', () => {
-        const terminal = createTerminal();
+        const terminal = createTerminal(80);
         const spinner = createSpinner(terminal.stream);
         spinner.start('one');
         vi.advanceTimersByTime(80);
@@ -93,14 +93,20 @@ describe('spinner', () => {
         expect(terminal.text().at(-1)).toBe('\r⠋ two');
     });
 
+    test('shows line breaks and tabs in the text as spaces, so the spinner stays on one row', () => {
+        const terminal = createTerminal(80);
+        createSpinner(terminal.stream).start('line one\nline two\r\nline\tthree');
+        expect(terminal.text()).toEqual(['\r⠋ line one line two  line three']);
+    });
+
     test('cuts the text so the line stays narrower than the terminal', () => {
         const terminal = createTerminal(10);
         createSpinner(terminal.stream).start('lookup table');
         expect(terminal.text()).toEqual(['\r⠋ lookup…']);
     });
 
-    test('takes the terminal as 80 columns wide when it reports no width', () => {
-        const terminal = createTerminal(undefined);
+    test.each([undefined, 0])('takes the terminal as 80 columns wide when it reports a width of %s', (columns) => {
+        const terminal = createTerminal(columns);
         createSpinner(terminal.stream).start('x'.repeat(100));
         expect(terminal.text()).toEqual([`\r⠋ ${'x'.repeat(76)}…`]);
     });
@@ -112,7 +118,7 @@ describe('spinner', () => {
     });
 });
 
-function createTerminal(columns: number | undefined = 80) {
+function createTerminal(columns: number | undefined) {
     const chunks: string[] = [];
     const stream = Object.assign(new PassThrough(), { columns }) as unknown as NodeJS.WriteStream;
     stream.on('data', (chunk) => chunks.push(String(chunk)));

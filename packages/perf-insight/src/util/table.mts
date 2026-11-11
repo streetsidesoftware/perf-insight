@@ -26,5 +26,5 @@ export function formatTable(header: string[], rows: (string | undefined)[][], ma
 
 function fit(text: string, width: number): string {
     const cut = cutText(text, width);
-    return cut + ' '.repeat(Math.max(0, width - textWidth(cut)));
+    return cut + ' '.repeat(width - textWidth(cut));
 }

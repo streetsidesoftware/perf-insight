@@ -10,7 +10,7 @@ export function textWidth(text: string): number {
 
 /**
  * Cut `text` so it is no wider than `width`. Text that fits is returned as it is.
- * Text that is cut ends in `…` and loses its color codes.
+ * Text that is cut ends in `…` and loses its color codes. Nothing is left of it when `width` is below 1.
  */
 export function cutText(text: string, width: number): string {
     const characters = visibleCharacters(text);
