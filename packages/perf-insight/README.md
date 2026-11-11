@@ -31,7 +31,6 @@ Options:
   -T, --test <test...>     Run only matching test found in suites
   --fail-fast              Stop on first failure. (default: false)
   --repeat <count>         Repeat the tests. (default: 1)
-  --register <loader>      Register a module loader.
   -h, --help               display help for command
 ```
 
@@ -117,16 +116,16 @@ suite('map', 'Measure .map performance with different functions', async (test) =
 File: examples/src/exampleMap.perf.mts
 Running Perf Suite: map
 Measure .map performance with different functions
-✔ map((a) => !!a)                    18135.52 ops/sec   9010 iterations  496.82ms time
-✔ map((a) => a != "")                17551.15 ops/sec   8733 iterations  497.57ms time
-✔ map((a) => a.length)               19382.93 ops/sec   9641 iterations  497.40ms time
-✔ map((a) => !!a.length)             18259.02 ops/sec   9088 iterations  497.73ms time
-✔ .map((a) => { return a.length; })  19300.85 ops/sec   9604 iterations  497.59ms time
-✔ .map(Boolean)                      18117.39 ops/sec   9018 iterations  497.75ms time
-✔ .map((a) => !a.length)             18088.76 ops/sec   9003 iterations  497.71ms time
-✔ .map((a) => { return !a.length; }) 18236.47 ops/sec   9080 iterations  497.90ms time
-✔ .map(function len)                 19635.27 ops/sec   9772 iterations  497.68ms time
-✔ .map(function hasLen)              18319.66 ops/sec   9121 iterations  497.88ms time
+✔ map((a) => !!a)                    17128.71 ops/sec   8502 iterations  496.36ms time
+✔ map((a) => a != "")                16905.84 ops/sec   8411 iterations  497.52ms time
+✔ map((a) => a.length)               18456.28 ops/sec   9176 iterations  497.18ms time
+✔ map((a) => !!a.length)             17334.51 ops/sec   8625 iterations  497.56ms time
+✔ .map((a) => { return a.length; })  18578.06 ops/sec   9242 iterations  497.47ms time
+✔ .map(Boolean)                      17497.66 ops/sec   8709 iterations  497.72ms time
+✔ .map((a) => !a.length)             17102.04 ops/sec   8509 iterations  497.54ms time
+✔ .map((a) => { return !a.length; }) 16408.35 ops/sec   8165 iterations  497.61ms time
+✔ .map(function len)                 18203.91 ops/sec   9054 iterations  497.37ms time
+✔ .map(function hasLen)              17353.75 ops/sec   8636 iterations  497.64ms time
 done.
 ```
 
@@ -137,5 +136,12 @@ The default search finds `.ts` and `.mts` perf files along with the JavaScript o
 
 The code must use only erasable TypeScript syntax (no `enum` or `namespace`), and relative imports must use the `.mts` / `.ts` extension.
 See [Node.js — Running TypeScript Natively](https://nodejs.org/en/learn/typescript/run-natively).
+
+For anything type stripping can't handle, such as `enum` or tsconfig `paths`, load a module loader through Node with `NODE_OPTIONS`.
+perf-insight passes `NODE_OPTIONS` on to the process that runs your perf files.
+
+```
+NODE_OPTIONS="--import tsx" npx perf-insight --all
+```
 
 <!--- @@inject-end: ../../README.md --->
