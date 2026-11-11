@@ -14,7 +14,6 @@ interface AppOptions {
     exclude?: string[];
     suite?: string[];
     test?: string[];
-    register?: string[];
     failFast?: boolean;
 }
 
@@ -37,7 +36,6 @@ export async function app(program = defaultCommand): Promise<Command> {
         .option('-T, --test <test...>', 'Run only matching test found in suites', appendValue)
         .option('--fail-fast', 'Stop on first failure.', false)
         .option('--repeat <count>', 'Repeat the tests.', (v) => Number(v), 1)
-        .option('--register <loader>', 'Register a module loader.', appendValue)
         .action(async (suiteNamesToRun: string[], options: AppOptions, command: Command) => {
             if (!suiteNamesToRun.length && !(options.all || options.file?.length)) {
                 console.error(chalk.red('No tests to run.'));
@@ -90,10 +88,6 @@ async function spawnRunners(files: string[], options: AppOptions): Promise<void>
 
     if (options.test?.length) {
         cliOptions.push(...options.test.flatMap((t) => ['--test', t]));
-    }
-
-    if (options.register?.length) {
-        cliOptions.push(...options.register.flatMap((r) => ['--register', r]));
     }
 
     for (const file of files) {
