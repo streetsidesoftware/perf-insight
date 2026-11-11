@@ -10,7 +10,8 @@ const { fork } = vi.hoisted(() => ({ fork: vi.fn() }));
 
 vi.mock('node:child_process', () => ({ fork }));
 
-const examplesDir = fileURLToPath(new URL('../../../examples/', import.meta.url));
+// The tests own this tree, so adding an example to the docs can't change their results.
+const fixtureDir = fileURLToPath(new URL('../fixtures/find-files/', import.meta.url));
 
 describe('app', () => {
     let cwd: string;
@@ -19,7 +20,7 @@ describe('app', () => {
 
     beforeEach(() => {
         cwd = process.cwd();
-        process.chdir(examplesDir);
+        process.chdir(fixtureDir);
         errors = [];
         logs = [];
         vi.spyOn(console, 'error').mockImplementation((...args) => {
@@ -76,11 +77,11 @@ describe('app', () => {
 
     test('runs the perf files matching the filter', async () => {
         const { program } = createProgram();
-        await run(genArgv(['fail']), program);
+        await run(genArgv(['alpha']), program);
         expect(fork).toHaveBeenCalledTimes(1);
         expect(fork).toHaveBeenCalledWith(
             expect.stringMatching(/runBenchmarkCli\.mjs$/),
-            ['src/fail.perf.mts', '--repeat', '1'],
+            ['src/alpha.perf.mts', '--repeat', '1'],
             expect.objectContaining({ stdio: 'inherit' }),
         );
         expect(process.exitCode).toBeUndefined();
@@ -89,10 +90,10 @@ describe('app', () => {
 
     test('passes the options on to the runner', async () => {
         const { program } = createProgram();
-        const args = ['fail', '-t', '50', '--repeat', '2', '-s', 'a', '-s', 'b', '-T', 'c'];
+        const args = ['alpha', '-t', '50', '--repeat', '2', '-s', 'a', '-s', 'b', '-T', 'c'];
         await run(genArgv(args), program);
         expect(fork.mock.calls[0][1]).toEqual([
-            'src/fail.perf.mts',
+            'src/alpha.perf.mts',
             '--repeat',
             '2',
             '--timeout',
@@ -108,16 +109,16 @@ describe('app', () => {
 
     test('runs every file with --all and --exclude', async () => {
         const { program } = createProgram();
-        await run(genArgv(['--all', '--exclude', '**/measure*', '--exclude', '**/trie*']), program);
+        await run(genArgv(['--all', '--exclude', '**/beta.*', '--exclude', 'other/**']), program);
         const files = fork.mock.calls.map((call) => call[1][0]).sort();
-        expect(files).toEqual(['src/exampleMap.perf.mts', 'src/fail.perf.mts']);
+        expect(files).toEqual(['src/alpha.perf.mts']);
     });
 
     test('a failing runner sets the exit code and the rest still run', async () => {
         fork.mockImplementation(() => fakeChild({ exitCode: 2 }));
         const { program } = createProgram();
         await run(genArgv(['--all']), program);
-        expect(fork.mock.calls.length).toBeGreaterThan(1);
+        expect(fork).toHaveBeenCalledTimes(3);
         expect(process.exitCode).toBe(2);
         expect(logs.join('\n')).toContain('failed.');
     });
@@ -133,7 +134,7 @@ describe('app', () => {
     test('a runner that fails to spawn is reported', async () => {
         fork.mockImplementation(() => fakeChild({ error: new Error('spawn failed') }));
         const { program } = createProgram();
-        await run(genArgv(['fail']), program);
+        await run(genArgv(['alpha']), program);
         expect(errors.join('\n')).toContain('Failed to spawn runner.');
         expect(fork.mock.results[0].value.disconnect).toHaveBeenCalled();
         expect(process.exitCode).toBe(1);
