@@ -11,7 +11,6 @@ export interface RunningStdDev {
     readonly min: number;
     readonly max: number;
     readonly ok: boolean;
-    /** The 95th percentile, within 0.5%. */
     readonly p95: number;
 }
 

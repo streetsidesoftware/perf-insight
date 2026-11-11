@@ -1,11 +1,13 @@
 /**
- * Finds quantiles of any number of values in fixed memory.
+ * Finds quantiles of any number of values in fixed memory, by counting the values in buckets.
  */
 export interface Histogram {
     push(value: number): void;
     /**
      * @param fraction - the share of the values at or below the result: 0.95 for the 95th percentile.
-     * @returns a value within 0.5% of the exact quantile.
+     *   It is above 0 and at most 1.
+     * @returns a value within 0.5% of the exact quantile, when the exact quantile is 0 or lies in the range
+     *   from `minValue` to `maxValue`.
      */
     quantile(fraction: number): number;
 }
@@ -16,17 +18,22 @@ export function createHistogram(): Histogram {
 
 /** Each bucket's upper bound is this many times its lower bound. */
 const growth = 1.01;
-/** Values at or below `minValue` are counted in the first bucket, and values above `maxValue` in the last. */
+/**
+ * The buckets cover the values above `minValue`, up to `maxValue`. Outside that range:
+ * - a value at or below `minValue` counts as 0, and so does NaN.
+ * - a value above `maxValue` counts as `maxValue`.
+ */
 const minValue = 1e-9;
 const maxValue = 1e12;
 
 const logGrowth = Math.log(growth);
 const logMinValue = Math.log(minValue);
-const bucketCount = Math.ceil((Math.log(maxValue) - logMinValue) / logGrowth) + 1;
+const indexBelowRange = 0;
+const indexAboveRange = indexInRange(maxValue) + 1;
 
 class HistogramImpl implements Histogram {
     // Floats count exactly up to 2^53. A 32-bit integer would overflow after 4.29 billion values in one bucket.
-    #counts = new Float64Array(bucketCount);
+    #counts = new Float64Array(indexAboveRange + 1);
     #count = 0;
 
     push(value: number) {
@@ -38,22 +45,27 @@ class HistogramImpl implements Histogram {
         const target = fraction * this.#count;
         let index = 0;
         let seen = this.#counts[0];
-        while (seen < target && index < bucketCount - 1) {
+        while (seen < target) {
             seen += this.#counts[++index];
         }
-        return bucketMiddle(index);
+        return bucketValue(index);
     }
 }
 
 function bucketIndex(value: number): number {
-    // Written so that NaN goes to the first bucket too.
-    if (!(value > minValue)) return 0;
-    return Math.min(Math.floor((Math.log(value) - logMinValue) / logGrowth), bucketCount - 1);
+    // Written so that NaN is below the range too.
+    if (!(value > minValue)) return indexBelowRange;
+    if (value > maxValue) return indexAboveRange;
+    return indexInRange(value);
 }
 
-/**
- * @returns the geometric middle, which is the same relative distance from both bounds of the bucket.
- */
-function bucketMiddle(index: number): number {
-    return minValue * growth ** (index + 0.5);
+function indexInRange(value: number): number {
+    return 1 + Math.floor((Math.log(value) - logMinValue) / logGrowth);
+}
+
+function bucketValue(index: number): number {
+    if (index === indexBelowRange) return 0;
+    if (index === indexAboveRange) return maxValue;
+    // The geometric middle, which is the same relative distance from both bounds of the bucket.
+    return minValue * growth ** (index - 0.5);
 }

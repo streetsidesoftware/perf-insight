@@ -41,21 +41,31 @@ describe('histogram', () => {
         ${-5}
         ${1e-12}
         ${Number.NaN}
-    `('counts $value in the first bucket', ({ value }) => {
+    `('counts $value as 0', ({ value }) => {
         const histogram = histogramOf([value, 1, 1]);
-        expect(histogram.quantile(0.3)).toBeLessThan(1.01e-9);
+        expect(histogram.quantile(0.3)).toBe(0);
         expect(relativeError(histogram.quantile(0.95), 1)).toBeLessThan(0.005);
     });
 
     test.each`
         value
+        ${1.0001e12}
         ${1e15}
         ${Infinity}
-    `('counts $value in the last bucket', ({ value }) => {
+    `('counts $value as the largest value in range', ({ value }) => {
+        expect(histogramOf([value]).quantile(1)).toBe(1e12);
         const histogram = histogramOf([1, 1, value]);
         expect(relativeError(histogram.quantile(0.5), 1)).toBeLessThan(0.005);
-        expect(histogram.quantile(1)).toBeGreaterThan(0.99e12);
-        expect(histogram.quantile(1)).toBeLessThan(1.02e12);
+        expect(histogram.quantile(1)).toBe(1e12);
+    });
+
+    test.each`
+        value
+        ${1.0001e-9}
+        ${0.9999e12}
+        ${1e12}
+    `('keeps $value, at the edge of the range, within 0.5%', ({ value }) => {
+        expect(relativeError(histogramOf([value]).quantile(0.95), value)).toBeLessThan(0.005);
     });
 });
 

@@ -71,6 +71,22 @@ describe('sd', async () => {
         expect(sd.p95).toBeLessThanOrEqual(sd.max);
     });
 
+    test('p95 is the value that 95% of the values are at or below', () => {
+        const sd = createRunningStdDev();
+        // Each value is 10% above the one before, so the neighboring percentiles are far apart.
+        const values = Array.from({ length: 100 }, (_, i) => 1.1 ** i);
+        values.forEach((value) => sd.push(value));
+        expect(relativeError(sd.p95, values[94])).toBeLessThan(0.005);
+    });
+
+    test('p95 is 0 when 95% of the values are 0', () => {
+        const sd = createRunningStdDev();
+        for (let i = 0; i < 100; ++i) {
+            sd.push(i < 96 ? 0 : 0.001);
+        }
+        expect(sd.p95).toBe(0);
+    });
+
     test('p95 is not moved by rare slow values', () => {
         const sd = createRunningStdDev();
         for (let i = 0; i < 100_000; ++i) {
