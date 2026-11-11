@@ -28,7 +28,7 @@ export async function app(program = defaultCommand): Promise<Command> {
     program
         .name('perf-insight')
         .addArgument(argument)
-        .description('Benchmark performance suites found in `**/*.perf.{js,cjs,mjs}`.')
+        .description('Benchmark performance suites found in `**/*.perf.{js,cjs,mjs,ts,mts}`.')
         .option('-a, --all', 'Run all perf files.', false)
         .option('-f, --file <glob...>', 'Globs to search for perf files.', appendValue)
         .option('-x, --exclude <glob...>', 'Globs to exclude from search.', appendValue)
@@ -46,7 +46,7 @@ export async function app(program = defaultCommand): Promise<Command> {
             }
 
             // console.log('%o', options);
-            const fileGlobs = options.file?.length ? options.file : ['**/*.perf.{js,mjs,cjs}'];
+            const fileGlobs = options.file?.length ? options.file : ['**/*.perf.{js,mjs,cjs,ts,mts}'];
             const excludes = options.exclude?.length ? options.exclude : [];
 
             const found = await findFiles([...fileGlobs, '!**/node_modules/**'], { excludes });

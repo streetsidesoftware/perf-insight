@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc -p .",
-    "test": "perf-insight example --suite map -t 500 --file \"**/*.perf.mts\""
+    "test": "perf-insight example --suite map -t 500"
   },
   "author": {
     "name": "Street Side Software",

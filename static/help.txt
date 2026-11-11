@@ -1,6 +1,6 @@
 Usage: perf-insight [options] [filter...]
 
-Benchmark performance suites found in `**/*.perf.{js,cjs,mjs}`.
+Benchmark performance suites found in `**/*.perf.{js,cjs,mjs,ts,mts}`.
 
 Arguments:
   filter                   Perf file filter.

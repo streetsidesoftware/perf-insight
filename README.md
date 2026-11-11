@@ -17,7 +17,7 @@ Performance Benchmarking Suite for NodeJS.
 ```
 Usage: perf-insight [options] [filter...]
 
-Benchmark performance suites found in `**/*.perf.{js,cjs,mjs}`.
+Benchmark performance suites found in `**/*.perf.{js,cjs,mjs,ts,mts}`.
 
 Arguments:
   filter                   Perf file filter.
@@ -117,7 +117,7 @@ suite('map', 'Measure .map performance with different functions', async (test) =
 
 **Example Output:**
 
-**`npx perf-insight exampleMap.perf.mts --file "**/*.perf.mts" --timeout 500`**
+**`npx perf-insight exampleMap.perf.mts --timeout 500`**
 
 <!--- @@inject: static/example.txt --->
 
@@ -125,16 +125,16 @@ suite('map', 'Measure .map performance with different functions', async (test) =
 File: examples/src/exampleMap.perf.mts
 Running Perf Suite: map
 Measure .map performance with different functions
-✔ map((a) => !!a)                    17569.36 ops/sec   8729 iterations  496.83ms time
-✔ map((a) => a != "")                16923.54 ops/sec   8423 iterations  497.71ms time
-✔ map((a) => a.length)               18781.42 ops/sec   9343 iterations  497.46ms time
-✔ map((a) => !!a.length)             17961.36 ops/sec   8941 iterations  497.79ms time
-✔ .map((a) => { return a.length; })  18752.49 ops/sec   9332 iterations  497.64ms time
-✔ .map(Boolean)                      17822.99 ops/sec   8872 iterations  497.78ms time
-✔ .map((a) => !a.length)             17782.90 ops/sec   8852 iterations  497.78ms time
-✔ .map((a) => { return !a.length; }) 17717.70 ops/sec   8824 iterations  498.03ms time
-✔ .map(function len)                 18491.62 ops/sec   9206 iterations  497.85ms time
-✔ .map(function hasLen)              17475.31 ops/sec   8702 iterations  497.96ms time
+✔ map((a) => !!a)                    18135.52 ops/sec   9010 iterations  496.82ms time
+✔ map((a) => a != "")                17551.15 ops/sec   8733 iterations  497.57ms time
+✔ map((a) => a.length)               19382.93 ops/sec   9641 iterations  497.40ms time
+✔ map((a) => !!a.length)             18259.02 ops/sec   9088 iterations  497.73ms time
+✔ .map((a) => { return a.length; })  19300.85 ops/sec   9604 iterations  497.59ms time
+✔ .map(Boolean)                      18117.39 ops/sec   9018 iterations  497.75ms time
+✔ .map((a) => !a.length)             18088.76 ops/sec   9003 iterations  497.71ms time
+✔ .map((a) => { return !a.length; }) 18236.47 ops/sec   9080 iterations  497.90ms time
+✔ .map(function len)                 19635.27 ops/sec   9772 iterations  497.68ms time
+✔ .map(function hasLen)              18319.66 ops/sec   9121 iterations  497.88ms time
 done.
 ```
 
@@ -143,13 +143,7 @@ done.
 ## TypeScript Support
 
 Node.js 22.18 and later run TypeScript files directly, so no loader or build step is needed.
-The default search only finds JavaScript files, so pass the TypeScript glob with `--file`.
-
-**Usage:**
-
-```
-npx perf-insight --file "**/*.perf.mts" --timeout 500
-```
+The default search finds `.ts` and `.mts` perf files along with the JavaScript ones.
 
 The code must use only erasable TypeScript syntax (no `enum` or `namespace`), and relative imports must use the `.mts` / `.ts` extension.
 See [Node.js — Running TypeScript Natively](https://nodejs.org/en/learn/typescript/run-natively).

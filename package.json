@@ -18,7 +18,7 @@
     "watch": "cd packages/perf-insight && pnpm run watch",
     "build:readme": "pnpm build && pnpm build:readme:help && pnpm build:readme:example && pnpm build:readme:inject && prettier -w \"**/README.md\"",
     "build:readme:help": "./bin.mjs --help > static/help.txt",
-    "build:readme:example": "./bin.mjs exampleMap.perf.mts --file \"**/*.perf.mts\" -t 500 > static/example.txt",
+    "build:readme:example": "./bin.mjs exampleMap.perf.mts -t 500 > static/example.txt",
     "build:readme:inject": "inject-markdown  README.md \"packages/*/README.md\"",
     "coverage": "pnpm -r --stream --workspace-concurrency=2 run coverage",
     "test": "pnpm -r --stream --workspace-concurrency=2 run test",
