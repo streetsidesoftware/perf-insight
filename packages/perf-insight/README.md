@@ -2,7 +2,7 @@
 
 # Performance Insight
 
-Performance Benchmarking Suite for NodeJS.
+Performance Benchmarking Suite for Node.js, Bun and Deno.
 
 ## Install
 
@@ -143,5 +143,30 @@ perf-insight passes `NODE_OPTIONS` on to the process that runs your perf files.
 ```
 NODE_OPTIONS="--import tsx" npx perf-insight --all
 ```
+
+## Bun and Deno
+
+perf-insight also runs under [Bun](https://bun.sh) and [Deno](https://deno.com).
+Your perf files run in the same runtime that starts perf-insight.
+
+**Bun**
+
+```
+bunx --bun perf-insight --all
+```
+
+Without `--bun`, Bun starts perf-insight with Node.js.
+
+**Deno**
+
+```
+deno run --allow-read --allow-env --allow-run --allow-sys npm:perf-insight --all
+```
+
+perf-insight needs these permissions to find perf files, read color settings, and start a process for each perf file.
+
+Bun and Deno run all TypeScript syntax, including `enum`, so they don't need the loader described above.
+
+Results from different runtimes are not comparable. Compare runs made with the same runtime.
 
 <!--- @@inject-end: ../../README.md --->

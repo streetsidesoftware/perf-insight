@@ -39,6 +39,47 @@ jobs:
           pnpm run build
           pnpm test
 
+  # Smoke test: run the example perf files with the documented Bun and Deno commands.
+  test-runtimes:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - runtime: bun
+            insight: bunx --bun perf-insight
+          - runtime: deno
+            insight: deno run --allow-read --allow-env --allow-run --allow-sys npm:perf-insight
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Setup Bun
+        if: matrix.runtime == 'bun'
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup Deno
+        if: matrix.runtime == 'deno'
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Run a passing suite
+        working-directory: examples
+        run: ${{ matrix.insight }} exampleMap --suite map -t 100
+
+      - name: Run a failing suite, expecting a non-zero exit code
+        working-directory: examples
+        run: '! ${{ matrix.insight }} fail -t 100'
+
   coverage:
     permissions:
       checks: write # for coverallsapp/github-action to create new checks
