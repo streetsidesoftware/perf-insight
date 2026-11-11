@@ -41,14 +41,14 @@
   "homepage": "https://github.com/streetsidesoftware/perf-insight#readme",
   "license": "MIT",
   "devDependencies": {
-    "lorem-ipsum": "^2.0.8"
+    "lorem-ipsum": "^2.0.10"
   },
   "dependencies": {
     "as-table": "^1.0.55",
     "chalk": "^5.6.2",
     "commander": "^14.0.3",
-    "globby": "^16.1.1",
-    "ora": "^9.3.0"
+    "globby": "^16.2.4",
+    "ora": "^9.4.1"
   },
   "files": [
     "bin.mjs",
