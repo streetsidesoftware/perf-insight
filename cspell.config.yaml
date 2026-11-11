@@ -19,6 +19,15 @@ ignorePaths:
   - ngram/**/*.json
 enableGlobDot: true
 useGitignore: true
+# In a git worktree, `.git` is a file holding the path to the worktree's git directory.
+# Do not spell check it. The `**/.git` glob also matches the files inside a `.git` directory,
+# so the second entry turns the check back on for the commit message. The order matters.
+# See https://github.com/streetsidesoftware/cspell/issues/9590
+overrides:
+  - filename: '**/.git'
+    enabled: false
+  - filename: '**/.git/COMMIT_EDITMSG'
+    enabled: true
 dictionaryDefinitions: []
 dictionaries: []
 words:
