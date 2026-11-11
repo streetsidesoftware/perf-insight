@@ -45,8 +45,7 @@
   },
   "dependencies": {
     "commander": "^15.1.0",
-    "globby": "^16.2.4",
-    "ora": "^10.0.0"
+    "globby": "^16.2.4"
   },
   "files": [
     "bin.mjs",

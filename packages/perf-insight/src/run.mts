@@ -1,8 +1,7 @@
 import type { PerfSuite, RunTestsOptions } from './perfSuite.mjs';
 import { getActiveSuites } from './perfSuite.mjs';
 import { stoppedAfterFailure } from './stoppedAfterFailure.mjs';
-import { formatTable } from './table.mjs';
-import { green, red, yellow } from './util/index.mjs';
+import { formatTable, green, red, yellow } from './util/index.mjs';
 
 export interface RunOptions {
     repeat?: number | undefined;
