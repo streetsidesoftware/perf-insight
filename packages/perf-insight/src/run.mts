@@ -1,9 +1,8 @@
-import { styleText } from 'node:util';
-
 import type { PerfSuite, RunTestsOptions } from './perfSuite.mjs';
 import { getActiveSuites } from './perfSuite.mjs';
 import { stoppedAfterFailure } from './stoppedAfterFailure.mjs';
 import { formatTable } from './table.mjs';
+import { green, red, yellow } from './util/index.mjs';
 
 export interface RunOptions {
     repeat?: number | undefined;
@@ -38,7 +37,7 @@ export async function runBenchmarkSuites(
 
     for (let repeat = options?.repeat || 1; repeat > 0; repeat--) {
         if (showRepeatMsg) {
-            console.log(styleText('yellow', `Repeating tests: ${repeat} more time${repeat > 1 ? 's' : ''}.`));
+            console.log(yellow(`Repeating tests: ${repeat} more time${repeat > 1 ? 's' : ''}.`));
         }
         const r = await runTestSuites(suites, suiteToRun || suites, options || {});
         numSuitesRun = r.numSuitesRun;
@@ -46,15 +45,15 @@ export async function runBenchmarkSuites(
         if (!numSuitesRun) break;
         if (r.hadFailures && options?.failFast) {
             const notRun = repeat - 1;
-            if (notRun) console.log(styleText('yellow', stoppedAfterFailure(notRun, 'repeat')));
+            if (notRun) console.log(yellow(stoppedAfterFailure(notRun, 'repeat')));
             break;
         }
         showRepeatMsg = true;
     }
 
     if (!numSuitesRun) {
-        console.log(styleText('red', 'No suites to run.'));
-        console.log(styleText('yellow', 'Available suites:'));
+        console.log(red('No suites to run.'));
+        console.log(yellow('Available suites:'));
         const width = process.stdout.columns || 80;
         const tableLines = formatTable(
             ['Suite', 'Description'],
@@ -95,7 +94,7 @@ async function runTestSuites(
         hadFailures ||= failed;
         if (failed && options.failFast) {
             const notRun = plan.slice(index + 1).filter((s) => s.kind === 'run').length;
-            if (notRun) console.log(styleText('yellow', stoppedAfterFailure(notRun, 'suite')));
+            if (notRun) console.log(yellow(stoppedAfterFailure(notRun, 'suite')));
             break;
         }
     }
@@ -105,17 +104,13 @@ async function runTestSuites(
     async function runStep(step: PlanStep): Promise<boolean> {
         switch (step.kind) {
             case 'filtered':
-                console.log(
-                    styleText('yellow', 'Skipping Perf Suite: ') +
-                        styleText('green', step.suite.name) +
-                        styleText('yellow', ' - not in filter.'),
-                );
+                console.log(yellow('Skipping Perf Suite: ') + green(step.suite.name) + yellow(' - not in filter.'));
                 return false;
             case 'unknown':
-                console.log(styleText('red', `Unknown test method: ${step.name}`));
+                console.log(red(`Unknown test method: ${step.name}`));
                 return true;
             case 'run': {
-                console.log(styleText('green', `Running Perf Suite: ${step.suite.name}`));
+                console.log(green(`Running Perf Suite: ${step.suite.name}`));
                 ++numSuitesRun;
                 const runOptions: RunTestsOptions = { tests: options.tests, failFast: options.failFast };
                 const result = await step.suite.setTimeout(timeout).runTests(runOptions);
