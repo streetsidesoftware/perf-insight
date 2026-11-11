@@ -369,8 +369,6 @@ async function runTests(
         const sd = createRunningStdDev();
         let startTime = performance.now();
 
-        let nextSd = 0;
-
         function reportIteration() {
             try {
                 ++iterationCallbacks;
@@ -400,11 +398,8 @@ async function runTests(
                 }
                 await runAfterEach();
                 duration += delta;
+                sd.push(delta);
                 const now = performance.now();
-                if (now > nextSd) {
-                    sd.push(delta);
-                    nextSd = performance.now() + 1;
-                }
                 if (now - lastReport > reportInterval) {
                     reportIteration();
                     lastReport = performance.now();
