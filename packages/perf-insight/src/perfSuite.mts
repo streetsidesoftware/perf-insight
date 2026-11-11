@@ -197,8 +197,8 @@ function formatResult(result: TestResult, nameWidth: number): string {
 
     const msg =
         `${name.padEnd(nameWidth)}` +
-        ` ${ops.toFixed(2).padStart(8)} ops/sec` +
-        ` ${iterations.toFixed(0).padStart(6)} iterations` +
+        ` ${ops.toFixed(2).padStart(12)} ops/sec` +
+        ` ${iterations.toFixed(0).padStart(9)} iterations` +
         // ` mean: ${mean.toPrecision(5).padStart(8)} ` +
         // ` p95: ${p95.toPrecision(5).padStart(8)} ` +
         // ` min/max: ${min.toPrecision(5).padStart(8)}/${max.toPrecision(5).padStart(8)} ` +
