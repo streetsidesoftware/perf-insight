@@ -39,10 +39,6 @@ jobs:
           pnpm run build
           pnpm test
 
-      - name: Test --register
-        run: |
-          pnpm run test:register
-
   coverage:
     permissions:
       checks: write # for coverallsapp/github-action to create new checks

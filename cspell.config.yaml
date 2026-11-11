@@ -33,6 +33,5 @@ words:
   - pnpm
   - Positionals
   - vitest
-  - jiti
 ignoreWords: []
 import: []
