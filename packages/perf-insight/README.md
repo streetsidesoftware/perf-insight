@@ -42,8 +42,8 @@ The report shows how many times per second each test ran.
 File: examples/src/lookup.perf.mts
 Running Perf Suite: lookup
 Compare looking up values in an Array and a Set
-✔ Array.includes 492411.14 ops/sec 221603 iterations  450.04ms time
-✔ Set.has        8562719.92 ops/sec 1604731 iterations  187.41ms time
+✔ Array.includes    481788.17 ops/sec    217768 iterations  452.00ms time
+✔ Set.has          8054144.58 ops/sec   1536352 iterations  190.75ms time
 done.
 ```
 
