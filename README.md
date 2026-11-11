@@ -148,7 +148,7 @@ The code must use only erasable TypeScript syntax (no `enum` or `namespace`), an
 See [Node.js — Running TypeScript Natively](https://nodejs.org/en/learn/typescript/run-natively).
 
 For anything type stripping can't handle, such as `enum` or tsconfig `paths`, load a module loader through Node with `NODE_OPTIONS`.
-The perf files run in a child process that inherits it.
+perf-insight passes `NODE_OPTIONS` on to the process that runs your perf files.
 
 ```
 NODE_OPTIONS="--import tsx" npx perf-insight --all
