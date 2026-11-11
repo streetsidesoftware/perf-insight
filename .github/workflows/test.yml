@@ -6,9 +6,9 @@ name: Test
 on:
   workflow_dispatch:
   push:
-    branches: ["main"]
+    branches: ['main']
   pull_request:
-    branches: ["main"]
+    branches: ['main']
 
 jobs:
   test-node-versions:
@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Setup
-        uses: streetsidesoftware/actions/public/setup-node-pnpm@v1
+        uses: ./.github/actions/setup
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -71,13 +71,13 @@ jobs:
       - run: pnpm run coverage
 
       - name: Upload coverage Coveralls
-        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # 2.3.7
+        uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2.3.8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          base-path: "packages/perf-insight"
-          path-to-lcov: "./packages/perf-insight/coverage/lcov.info"
+          base-path: 'packages/perf-insight'
+          path-to-lcov: './packages/perf-insight/coverage/lcov.info'
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v3
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           files: packages/perf-insight/coverage/lcov.info
