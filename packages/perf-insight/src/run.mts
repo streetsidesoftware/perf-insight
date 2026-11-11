@@ -1,9 +1,9 @@
-import asTable from 'as-table';
 import chalk from 'chalk';
 
 import type { PerfSuite, RunTestsOptions } from './perfSuite.mjs';
 import { getActiveSuites } from './perfSuite.mjs';
 import { stoppedAfterFailure } from './stoppedAfterFailure.mjs';
+import { formatTable } from './table.mjs';
 
 export interface RunOptions {
     repeat?: number | undefined;
@@ -56,15 +56,12 @@ export async function runBenchmarkSuites(
         console.log(chalk.red('No suites to run.'));
         console.log(chalk.yellow('Available suites:'));
         const width = process.stdout.columns || 80;
-        const table = asTable.configure({ maxTotalWidth: width - 2 })(
-            suites.map((suite) => ({ Suite: suite.name, Description: suite.description })),
+        const tableLines = formatTable(
+            ['Suite', 'Description'],
+            suites.map((suite) => [suite.name, suite.description]),
+            width - 2,
         );
-        console.log(
-            table
-                .split('\n')
-                .map((line) => `  ${line}`)
-                .join('\n'),
-        );
+        console.log(tableLines.map((line) => `  ${line}`).join('\n'));
 
         hadErrors = true;
     }
