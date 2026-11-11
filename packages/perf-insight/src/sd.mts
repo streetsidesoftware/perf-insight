@@ -1,3 +1,5 @@
+import { createHistogram } from './histogram.mjs';
+
 export interface RunningStdDev {
     push(value: number): void;
     readonly count: number;
@@ -9,6 +11,7 @@ export interface RunningStdDev {
     readonly min: number;
     readonly max: number;
     readonly ok: boolean;
+    /** The 95th percentile, within 0.5%. */
     readonly p95: number;
 }
 
@@ -22,8 +25,10 @@ class RunningStdDevImpl {
     #m2 = 0;
     #min = Infinity;
     #max = -Infinity;
+    #histogram = createHistogram();
 
     push(value: number) {
+        this.#histogram.push(value);
         let mean = this.#count ? this.#sum / this.#count : 0;
         this.#count++;
         const delta = value - mean;
@@ -78,7 +83,9 @@ class RunningStdDevImpl {
     }
 
     get p95() {
-        return this.mean + 1.96 * this.sampleStandardDeviation;
+        assert(this.#count, 'No values to calculate p95');
+        // The middle of a bucket can lie outside the values that were pushed.
+        return Math.min(this.#max, Math.max(this.#min, this.#histogram.quantile(0.95)));
     }
 }
 

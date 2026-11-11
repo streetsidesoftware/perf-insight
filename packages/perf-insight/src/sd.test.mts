@@ -26,8 +26,7 @@ describe('sd', async () => {
         expect(sd.mean).toBe(mean);
         expect(sd.min).toBe(min);
         expect(sd.max).toBe(max);
-        expect(sd.p95).toBeGreaterThan(p95 * 0.9);
-        expect(sd.p95).toBeLessThan(p95 * 1.05);
+        expect(relativeError(sd.p95, p95)).toBeLessThan(0.01);
         expect(sd.ok).toBe(true);
     });
 
@@ -47,6 +46,7 @@ describe('sd', async () => {
         expect(sd.min).toBe(Infinity);
         expect(sd.max).toBe(-Infinity);
         expect(() => sd.mean).toThrow('No values to calculate mean');
+        expect(() => sd.p95).toThrow('No values to calculate p95');
     });
 
     test('a single value', () => {
@@ -56,7 +56,27 @@ describe('sd', async () => {
         expect(sd.mean).toBe(3);
         expect(() => sd.variance).toThrow('Need at least two values to calculate variance');
         expect(() => sd.sampleVariance).toThrow('Need at least two values to calculate sample variance');
-        expect(() => sd.p95).toThrow();
+        expect(sd.p95).toBe(3);
+    });
+
+    // The histogram answers 0.9983 for both: the middle of the bucket that holds them.
+    test.each`
+        values
+        ${[0.994, 0.995, 0.996]}
+        ${[1.0001, 1.0002, 1.0003]}
+    `('p95 stays within $values', ({ values }: { values: number[] }) => {
+        const sd = createRunningStdDev();
+        values.forEach((value) => sd.push(value));
+        expect(sd.p95).toBeGreaterThanOrEqual(sd.min);
+        expect(sd.p95).toBeLessThanOrEqual(sd.max);
+    });
+
+    test('p95 is not moved by rare slow values', () => {
+        const sd = createRunningStdDev();
+        for (let i = 0; i < 100_000; ++i) {
+            sd.push(i % 500 === 0 ? 2 : 0.00006);
+        }
+        expect(relativeError(sd.p95, 0.00006)).toBeLessThan(0.01);
     });
 });
 
