@@ -1,14 +1,19 @@
 import asTable from 'as-table';
 import chalk from 'chalk';
 
-import type { PerfSuite } from './perfSuite.mjs';
+import type { PerfSuite, RunTestsOptions } from './perfSuite.mjs';
 import { getActiveSuites } from './perfSuite.mjs';
+import { stoppedAfterFailure } from './stoppedAfterFailure.mjs';
 
 export interface RunOptions {
     repeat?: number | undefined;
     timeout?: number | undefined;
     suites?: string[] | undefined;
     tests?: string[] | undefined;
+    /**
+     * Stop at the first failing test, suite or repeat.
+     */
+    failFast?: boolean | undefined;
 }
 
 export interface RunBenchmarkSuitesResult {
@@ -39,6 +44,11 @@ export async function runBenchmarkSuites(
         numSuitesRun = r.numSuitesRun;
         hadErrors ||= r.hadFailures;
         if (!numSuitesRun) break;
+        if (r.hadFailures && options?.failFast) {
+            const notRun = repeat - 1;
+            if (notRun) console.log(chalk.yellow(stoppedAfterFailure(notRun, 'repeat')));
+            break;
+        }
         showRepeatMsg = true;
     }
 
@@ -62,13 +72,16 @@ export async function runBenchmarkSuites(
     return { hadFailures: hadErrors, numSuitesRun };
 }
 
-interface Result {
+interface RunTestSuitesResults {
     hadFailures: boolean;
-}
-
-interface RunTestSuitesResults extends Result {
     numSuitesRun: number;
 }
+
+/**
+ * One step of a run, in the order the steps happen.
+ */
+type PlanStep =
+    { kind: 'run'; suite: PerfSuite } | { kind: 'filtered'; suite: PerfSuite } | { kind: 'unknown'; name: string };
 
 async function runTestSuites(
     suites: PerfSuite[],
@@ -76,53 +89,74 @@ async function runTestSuites(
     options: RunOptions,
 ): Promise<RunTestSuitesResults> {
     const timeout = options.timeout || undefined;
-    const suitesRun = new Set<PerfSuite>();
+    const plan = planRun(suites, suitesToRun, options.suites);
     let hadFailures = false;
+    let numSuitesRun = 0;
 
-    async function _runSuite(suites: PerfSuite[]): Promise<Result> {
-        let hadFailures = false;
-        for (const suite of suites) {
-            if (suitesRun.has(suite)) continue;
-            if (!filterSuite(suite)) {
-                console.log(chalk.yellow(`Skipping Perf Suite: ${chalk.green(suite.name)} - not in filter.`));
-                continue;
-            }
-            suitesRun.add(suite);
-            console.log(chalk.green(`Running Perf Suite: ${suite.name}`));
-            const result = await suite.setTimeout(timeout).runTests({ tests: options.tests });
-            if (result.hadFailures) {
-                hadFailures = true;
-            }
+    for (const [index, step] of plan.entries()) {
+        const failed = await runStep(step);
+        hadFailures ||= failed;
+        if (failed && options.failFast) {
+            const notRun = plan.slice(index + 1).filter((s) => s.kind === 'run').length;
+            if (notRun) console.log(chalk.yellow(stoppedAfterFailure(notRun, 'suite')));
+            break;
         }
-
-        return { hadFailures: hadFailures };
     }
 
-    async function runSuite(name: string | PerfSuite): Promise<Result> {
-        if (typeof name !== 'string') {
-            return await _runSuite([name]);
-        }
+    return { hadFailures, numSuitesRun };
 
-        if (name === 'all') {
-            return await _runSuite(suites);
+    async function runStep(step: PlanStep): Promise<boolean> {
+        switch (step.kind) {
+            case 'filtered':
+                console.log(chalk.yellow(`Skipping Perf Suite: ${chalk.green(step.suite.name)} - not in filter.`));
+                return false;
+            case 'unknown':
+                console.log(chalk.red(`Unknown test method: ${step.name}`));
+                return true;
+            case 'run': {
+                console.log(chalk.green(`Running Perf Suite: ${step.suite.name}`));
+                ++numSuitesRun;
+                const runOptions: RunTestsOptions = { tests: options.tests, failFast: options.failFast };
+                const result = await step.suite.setTimeout(timeout).runTests(runOptions);
+                return result.hadFailures;
+            }
         }
-        const matching = suites.filter((suite) => suite.name.toLowerCase().startsWith(name.toLowerCase()));
-        if (!matching.length) {
-            console.log(chalk.red(`Unknown test method: ${name}`));
-            return { hadFailures: true };
-        }
-        return await _runSuite(matching);
     }
+}
+
+/**
+ * Resolves the requested suites into the steps of a run. Each suite appears at most once.
+ * @param suites - all active suites.
+ * @param suitesToRun - suites, suite name prefixes, or `all`.
+ * @param filter - when not empty, only suites whose name contains one of these run.
+ */
+function planRun(suites: PerfSuite[], suitesToRun: (string | PerfSuite)[], filter: string[] | undefined): PlanStep[] {
+    const seen = new Set<PerfSuite>();
+    const plan: PlanStep[] = [];
 
     for (const name of suitesToRun) {
-        hadFailures ||= (await runSuite(name)).hadFailures;
+        const matching = resolve(name);
+        if (!matching.length) {
+            plan.push({ kind: 'unknown', name: name as string });
+            continue;
+        }
+        for (const suite of matching) {
+            if (seen.has(suite)) continue;
+            seen.add(suite);
+            plan.push({ kind: inFilter(suite) ? 'run' : 'filtered', suite });
+        }
     }
 
-    return { hadFailures, numSuitesRun: suitesRun.size };
+    return plan;
 
-    function filterSuite(suite: PerfSuite): boolean {
-        const { suites } = options;
-        if (!suites?.length) return true;
-        return suites.some((name) => suite.name.toLowerCase().includes(name.toLowerCase()));
+    function resolve(name: string | PerfSuite): PerfSuite[] {
+        if (typeof name !== 'string') return [name];
+        if (name === 'all') return suites;
+        return suites.filter((suite) => suite.name.toLowerCase().startsWith(name.toLowerCase()));
+    }
+
+    function inFilter(suite: PerfSuite): boolean {
+        if (!filter?.length) return true;
+        return filter.some((name) => suite.name.toLowerCase().includes(name.toLowerCase()));
     }
 }

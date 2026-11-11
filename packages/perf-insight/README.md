@@ -155,16 +155,16 @@ suite('map', 'Measure .map performance with different functions', async (test) =
 File: examples/src/exampleMap.perf.mts
 Running Perf Suite: map
 Measure .map performance with different functions
-✔ map((a) => !!a)                    17128.71 ops/sec   8502 iterations  496.36ms time
-✔ map((a) => a != "")                16905.84 ops/sec   8411 iterations  497.52ms time
-✔ map((a) => a.length)               18456.28 ops/sec   9176 iterations  497.18ms time
-✔ map((a) => !!a.length)             17334.51 ops/sec   8625 iterations  497.56ms time
-✔ .map((a) => { return a.length; })  18578.06 ops/sec   9242 iterations  497.47ms time
-✔ .map(Boolean)                      17497.66 ops/sec   8709 iterations  497.72ms time
-✔ .map((a) => !a.length)             17102.04 ops/sec   8509 iterations  497.54ms time
-✔ .map((a) => { return !a.length; }) 16408.35 ops/sec   8165 iterations  497.61ms time
-✔ .map(function len)                 18203.91 ops/sec   9054 iterations  497.37ms time
-✔ .map(function hasLen)              17353.75 ops/sec   8636 iterations  497.64ms time
+✔ map((a) => !!a)                        15660.10 ops/sec      7778 iterations  496.68ms time
+✔ map((a) => a != "")                    16766.89 ops/sec      8346 iterations  497.77ms time
+✔ map((a) => a.length)                   17699.53 ops/sec      8806 iterations  497.53ms time
+✔ map((a) => !!a.length)                 17065.99 ops/sec      8494 iterations  497.72ms time
+✔ .map((a) => { return a.length; })      18165.65 ops/sec      9040 iterations  497.64ms time
+✔ .map(Boolean)                          17465.70 ops/sec      8694 iterations  497.78ms time
+✔ .map((a) => !a.length)                 17500.26 ops/sec      8710 iterations  497.71ms time
+✔ .map((a) => { return !a.length; })     17565.79 ops/sec      8748 iterations  498.01ms time
+✔ .map(function len)                     18482.47 ops/sec      9202 iterations  497.88ms time
+✔ .map(function hasLen)                  17549.38 ops/sec      8742 iterations  498.14ms time
 done.
 ```
 

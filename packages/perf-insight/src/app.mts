@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import { Argument, Command, program as defaultCommand } from 'commander';
 
 import { findFiles } from './findFiles.mjs';
+import { stoppedAfterFailure } from './stoppedAfterFailure.mjs';
 
 interface AppOptions {
     repeat?: number;
@@ -90,21 +91,34 @@ async function spawnRunners(files: string[], options: AppOptions): Promise<void>
         cliOptions.push(...options.test.flatMap((t) => ['--test', t]));
     }
 
-    for (const file of files) {
-        try {
-            const code = await spawnRunner([file, ...cliOptions]);
-            if (code) {
-                // console.error('Runner failed with "%s" code: %d', file, code);
-                process.exitCode ??= code;
-                if (options.failFast) {
-                    break;
-                }
-            }
-        } catch (e) {
-            console.error('Failed to spawn runner.', e);
-            process.exitCode ??= 1;
+    if (options.failFast) {
+        cliOptions.push('--fail-fast');
+    }
+
+    for (const [index, file] of files.entries()) {
+        const failed = await runFile(file, cliOptions);
+        if (failed && options.failFast) {
+            const notRun = files.length - index - 1;
+            if (notRun) console.log(chalk.yellow(stoppedAfterFailure(notRun, 'file')));
+            break;
         }
     }
+}
+
+/**
+ * Runs one perf file in its own process.
+ * @returns true if the runner failed or could not be started.
+ */
+async function runFile(file: string, cliOptions: string[]): Promise<boolean> {
+    try {
+        const code = await spawnRunner([file, ...cliOptions]);
+        if (!code) return false;
+        process.exitCode ??= code;
+    } catch (e) {
+        console.error('Failed to spawn runner.', e);
+        process.exitCode ??= 1;
+    }
+    return true;
 }
 
 function spawnRunner(args: string[]): Promise<number | undefined> {

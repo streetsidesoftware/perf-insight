@@ -4,6 +4,7 @@ import type { Ora } from 'ora';
 import ora from 'ora';
 
 import { createRunningStdDev, RunningStdDev } from './sd.mjs';
+import { stoppedAfterFailure } from './stoppedAfterFailure.mjs';
 
 export type PreparedPerfTestFn<T> = (
     name: string,
@@ -151,6 +152,17 @@ export interface PerfSuite {
     readonly setTimeout: (timeout: number | undefined) => this;
 }
 
+/**
+ * Options the runner uses that are not part of the public API.
+ * Every suite made by `suite()` accepts them in `runTests()`.
+ */
+export interface RunTestsOptions extends PerfSuiteRunTestsOptions {
+    /**
+     * Stop at the first failing test.
+     */
+    failFast?: boolean | undefined;
+}
+
 export function suite(name: string, suiteFn: SuiteFn): PerfSuite;
 export function suite(name: string, description: string | undefined, suiteFn: SuiteFn): PerfSuite;
 export function suite(name: string, description: string, suiteFn: SuiteFn): PerfSuite;
@@ -197,8 +209,8 @@ function formatResult(result: TestResult, nameWidth: number): string {
 
     const msg =
         `${name.padEnd(nameWidth)}` +
-        ` ${ops.toFixed(2).padStart(8)} ops/sec` +
-        ` ${iterations.toFixed(0).padStart(6)} iterations` +
+        ` ${ops.toFixed(2).padStart(12)} ops/sec` +
+        ` ${iterations.toFixed(0).padStart(9)} iterations` +
         // ` mean: ${mean.toPrecision(5).padStart(8)} ` +
         // ` p95: ${p95.toPrecision(5).padStart(8)} ` +
         // ` min/max: ${min.toPrecision(5).padStart(8)}/${max.toPrecision(5).padStart(8)} ` +
@@ -222,7 +234,7 @@ class PerfSuiteImpl implements PerfSuite {
         registerSuite(this);
     }
 
-    runTests(options?: PerfSuiteRunTestsOptions): Promise<RunnerResult> {
+    runTests(options?: RunTestsOptions): Promise<RunnerResult> {
         return runTests(this, options);
     }
 
@@ -234,7 +246,7 @@ class PerfSuiteImpl implements PerfSuite {
 
 async function runTests(
     suite: PerfSuiteImpl,
-    options: PerfSuiteRunTestsOptions | undefined,
+    options: RunTestsOptions | undefined,
     progress?: ProgressReporting,
 ): Promise<RunnerResult> {
     const stdout = progress?.stdout || process.stdout;
@@ -459,10 +471,15 @@ async function runTests(
         log(description);
     }
     await runBeforeAll();
-    for (const test of tests) {
+    for (const [index, test] of tests.entries()) {
         reportTestStart(test.name);
         const result = await runTest(test);
         reportTestEnd(result);
+        if (result.error && options?.failFast) {
+            const notRun = tests.length - index - 1;
+            if (notRun) log(stoppedAfterFailure(notRun, 'test'));
+            break;
+        }
     }
     await runAfterAll();
 
