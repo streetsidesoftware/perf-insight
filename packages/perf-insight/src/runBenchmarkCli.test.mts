@@ -2,10 +2,6 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { run } from './runBenchmarkCli.mjs';
 
-const { register } = vi.hoisted(() => ({ register: vi.fn() }));
-
-vi.mock('module', async (importOriginal) => ({ ...(await importOriginal<typeof import('module')>()), register }));
-
 const root = new URL('../fixtures/', import.meta.url).href;
 
 describe('runBenchmarkCli', () => {
@@ -23,7 +19,6 @@ describe('runBenchmarkCli', () => {
     afterEach(() => {
         process.exitCode = undefined;
         vi.restoreAllMocks();
-        register.mockReset();
     });
 
     // Suites register globally, so each test selects its own suites with `--suite`.
@@ -55,14 +50,6 @@ describe('runBenchmarkCli', () => {
     test('files are resolved against the current directory by default', async () => {
         const r = await run(['fixtures/pass.perf.mts', '--suite', 'fixture-pass']);
         expect(r).toEqual({ error: undefined, hadFailures: false });
-    });
-
-    test('registers module loaders relative to the root', async () => {
-        await run(['--root', root, '--register', 'loader-a', '--register', 'loader-b', '--suite', 'fixture-pass']);
-        expect(register.mock.calls).toEqual([
-            ['loader-a', new URL(root)],
-            ['loader-b', new URL(root)],
-        ]);
     });
 
     test('unknown options are rejected', async () => {

@@ -17,6 +17,7 @@ describe('perfSuite', () => {
 
     afterEach(() => {
         vi.restoreAllMocks();
+        vi.unstubAllEnvs();
     });
 
     test('suite registers itself as an active suite', () => {
@@ -202,6 +203,9 @@ describe('perfSuite', () => {
     test('uses a spinner when stdout is a TTY', async () => {
         const isTTY = process.stdout.isTTY;
         process.stdout.isTTY = true;
+        // ora only spins in an interactive terminal: not in CI and not with TERM=dumb.
+        vi.stubEnv('CI', undefined);
+        vi.stubEnv('TERM', 'xterm');
         try {
             const r = await runSuite('tty', (test) => {
                 test('ok', () => undefined, shortTimeout);

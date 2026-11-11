@@ -89,7 +89,7 @@ describe('app', () => {
 
     test('passes the options on to the runner', async () => {
         const { program } = createProgram();
-        const args = ['fail', '-t', '50', '--repeat', '2', '-s', 'a', '-s', 'b', '-T', 'c', '--register', 'r'];
+        const args = ['fail', '-t', '50', '--repeat', '2', '-s', 'a', '-s', 'b', '-T', 'c'];
         await run(genArgv(args), program);
         expect(fork.mock.calls[0][1]).toEqual([
             'src/fail.perf.mts',
@@ -103,8 +103,6 @@ describe('app', () => {
             'b',
             '--test',
             'c',
-            '--register',
-            'r',
         ]);
     });
 
