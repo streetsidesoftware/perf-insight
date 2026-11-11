@@ -1,11 +1,11 @@
 import { fork } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-import chalk from 'chalk';
 import { Argument, Command, program as defaultCommand } from 'commander';
 
 import { findFiles } from './findFiles.mjs';
 import { stoppedAfterFailure } from './stoppedAfterFailure.mjs';
+import { green, red, yellow } from './util/index.mjs';
 
 interface AppOptions {
     repeat?: number;
@@ -39,8 +39,8 @@ export async function app(program = defaultCommand): Promise<Command> {
         .option('--repeat <count>', 'Repeat the tests.', (v) => Number(v), 1)
         .action(async (suiteNamesToRun: string[], options: AppOptions, command: Command) => {
             if (!suiteNamesToRun.length && !(options.all || options.file?.length)) {
-                console.error(chalk.red('No tests to run.'));
-                console.error(chalk.yellow(`Use ${chalk.green('--all')} to run all tests.\n`));
+                console.error(red('No tests to run.'));
+                console.error(yellow('Use ') + green('--all') + yellow(' to run all tests.\n'));
                 command.help();
             }
 
@@ -51,7 +51,7 @@ export async function app(program = defaultCommand): Promise<Command> {
             const found = await findFiles([...fileGlobs, '!**/node_modules/**'], { excludes });
 
             if (!found.length) {
-                console.error(chalk.red('No perf files found.'));
+                console.error(red('No perf files found.'));
                 return;
             }
 
@@ -63,7 +63,7 @@ export async function app(program = defaultCommand): Promise<Command> {
 
             await spawnRunners(files, options);
 
-            return process.exitCode ? console.log(chalk.red('failed.')) : console.log(chalk.green('done.'));
+            return console.log(process.exitCode ? red('failed.') : green('done.'));
         });
 
     program.showHelpAfterError();
@@ -99,7 +99,7 @@ async function spawnRunners(files: string[], options: AppOptions): Promise<void>
         const failed = await runFile(file, cliOptions);
         if (failed && options.failFast) {
             const notRun = files.length - index - 1;
-            if (notRun) console.log(chalk.yellow(stoppedAfterFailure(notRun, 'file')));
+            if (notRun) console.log(yellow(stoppedAfterFailure(notRun, 'file')));
             break;
         }
     }
