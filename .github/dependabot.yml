@@ -16,6 +16,10 @@ updates:
       production-dependencies:
         dependency-type: 'production'
         update-types: ['minor', 'patch']
+    ignore:
+      # Major @types/node updates are made by hand, not by Dependabot.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
 
   # Workflows and local actions share one entry, so all action updates arrive as one PR.
   - package-ecosystem: 'github-actions'
