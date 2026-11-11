@@ -1,3 +1,4 @@
+# cspell:ignore minimatch
 ---
 packages:
   - 'packages/*'
@@ -5,3 +6,7 @@ packages:
 
 allowBuilds:
   esbuild: true
+
+overrides:
+  # GHSA-g3hv-75wg-m249: fixed only in minimatch 11.0.1. eslint and typescript-eslint still ask for ^10.
+  minimatch@>=10 <11.0.1: ^11.0.1

@@ -27,7 +27,7 @@
   "license": "MIT",
   "dependencies": {
     "cspell-trie-lib": "^10.4.1",
-    "lorem-ipsum": "^2.0.10",
+    "lorem-ipsum": "^3.0.0",
     "perf-insight": "workspace:*"
   }
 }
