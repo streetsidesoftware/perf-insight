@@ -115,7 +115,8 @@ async function runTestSuites(
     }
 
     for (const name of suitesToRun) {
-        hadFailures ||= (await runSuite(name)).hadFailures;
+        const result = await runSuite(name);
+        hadFailures ||= result.hadFailures;
     }
 
     return { hadFailures, numSuitesRun: suitesRun.size };

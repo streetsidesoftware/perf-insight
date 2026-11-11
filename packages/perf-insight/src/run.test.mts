@@ -62,6 +62,18 @@ describe('runBenchmarkSuites', () => {
         expect(runAlpha).toHaveBeenCalledTimes(1);
     });
 
+    test('suites after a failing suite still run', async () => {
+        const runAlpha = vi.spyOn(suiteAlpha, 'runTests');
+        const r = await runBenchmarkSuites([suiteAlphabet, suiteFails, suiteAlpha]);
+        expect(r).toEqual({ hadFailures: true, numSuitesRun: 3 });
+        expect(runAlpha).toHaveBeenCalledTimes(1);
+    });
+
+    test('suites after an unknown name still run', async () => {
+        const r = await runBenchmarkSuites(['unknown', 'alphabet']);
+        expect(r).toEqual({ hadFailures: true, numSuitesRun: 1 });
+    });
+
     test('an unknown name is a failure', async () => {
         const r = await runBenchmarkSuites(['alphabet', 'unknown']);
         expect(r).toEqual({ hadFailures: true, numSuitesRun: 1 });
