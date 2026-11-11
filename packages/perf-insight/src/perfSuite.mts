@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 
 import { createRunningStdDev, RunningStdDev } from './sd.mjs';
-import { createSpinner } from './spinner.mjs';
 import { stoppedAfterFailure } from './stoppedAfterFailure.mjs';
+import { createSpinner } from './util/index.mjs';
 
 export type PreparedPerfTestFn<T> = (
     name: string,
