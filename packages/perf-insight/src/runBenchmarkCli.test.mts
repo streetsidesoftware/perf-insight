@@ -6,10 +6,14 @@ const root = new URL('../fixtures/', import.meta.url).href;
 
 describe('runBenchmarkCli', () => {
     let errors: string[];
+    let logs: string[];
 
     beforeEach(() => {
         errors = [];
-        vi.spyOn(console, 'log').mockImplementation(() => undefined);
+        logs = [];
+        vi.spyOn(console, 'log').mockImplementation((...args) => {
+            logs.push(args.join(' '));
+        });
         vi.spyOn(console, 'error').mockImplementation((...args) => {
             errors.push(args.join(' '));
         });
@@ -36,6 +40,21 @@ describe('runBenchmarkCli', () => {
             hadFailures,
         });
         expect(process.exitCode).toBe(exitCode);
+    });
+
+    test('--fail-fast stops after the first failing suite', async () => {
+        const r = await run(['fail-fast.perf.mts', '--root', root, '--suite', 'fixture-ff', '--fail-fast']);
+        expect(r).toEqual({ error: undefined, hadFailures: true });
+        const text = logs.join('\n');
+        expect(text).toContain('Running Perf Suite: fixture-ff-fails');
+        expect(text).not.toContain('Running Perf Suite: fixture-ff-after');
+        expect(text).toContain('Stopped after first failure: 1 suite not run.');
+    });
+
+    test('without --fail-fast every suite runs', async () => {
+        const r = await run(['fail-fast.perf.mts', '--root', root, '--suite', 'fixture-ff']);
+        expect(r).toEqual({ error: undefined, hadFailures: true });
+        expect(logs.join('\n')).toContain('Running Perf Suite: fixture-ff-after');
     });
 
     test('a file that fails to import is an error', async () => {

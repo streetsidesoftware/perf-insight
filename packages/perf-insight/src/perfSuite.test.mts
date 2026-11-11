@@ -2,6 +2,7 @@ import { stripVTControlCharacters } from 'node:util';
 
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
+import type { RunTestsOptions } from './perfSuite.mjs';
 import { getActiveSuites, runSuite, suite } from './perfSuite.mjs';
 
 const shortTimeout = 5;
@@ -156,6 +157,46 @@ describe('perfSuite', () => {
             );
         });
         expect(r.results[0].error).toEqual(new Error('not an error'));
+    });
+
+    test('failFast stops after the first failing test', async () => {
+        const afterAll = vi.fn();
+        const s = suite('fail fast', (test) => {
+            test.afterAll(afterAll);
+            test('ok', () => undefined, shortTimeout);
+            test(
+                'throws',
+                () => {
+                    throw new Error('boom');
+                },
+                shortTimeout,
+            );
+            test('after 1', () => undefined, shortTimeout);
+            test('after 2', () => undefined, shortTimeout);
+        });
+        const options: RunTestsOptions = { failFast: true };
+        const r = await s.runTests(options);
+        expect(r.hadFailures).toBe(true);
+        expect(r.results.map((r) => r.name)).toEqual(['ok', 'throws']);
+        expect(afterAll).toHaveBeenCalledTimes(1);
+        expect(output.join('')).toContain('Stopped after first failure: 2 tests not run.\n');
+    });
+
+    test('failFast has nothing to report when the last test fails', async () => {
+        const s = suite('fail fast last', (test) => {
+            test('ok', () => undefined, shortTimeout);
+            test(
+                'throws',
+                () => {
+                    throw new Error('boom');
+                },
+                shortTimeout,
+            );
+        });
+        const options: RunTestsOptions = { failFast: true };
+        const r = await s.runTests(options);
+        expect(r.results).toHaveLength(2);
+        expect(output.join('')).not.toContain('Stopped after first failure');
     });
 
     test('filter tests by name, ignoring case', async () => {

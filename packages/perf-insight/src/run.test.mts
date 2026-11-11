@@ -74,6 +74,46 @@ describe('runBenchmarkSuites', () => {
         expect(r).toEqual({ hadFailures: true, numSuitesRun: 1 });
     });
 
+    test('failFast stops after the first failing suite', async () => {
+        const runAlpha = vi.spyOn(suiteAlpha, 'runTests');
+        const runFails = vi.spyOn(suiteFails, 'runTests');
+        const r = await runBenchmarkSuites([suiteFails, suiteAlpha, suiteAlphabet], { failFast: true });
+        expect(r).toEqual({ hadFailures: true, numSuitesRun: 1 });
+        expect(runAlpha).not.toHaveBeenCalled();
+        expect(runFails).toHaveBeenCalledWith({ tests: undefined, failFast: true });
+        expect(log.join('\n')).toContain('Stopped after first failure: 2 suites not run.');
+    });
+
+    test('failFast stops at an unknown name', async () => {
+        const r = await runBenchmarkSuites(['unknown', 'alphabet'], { failFast: true });
+        expect(r.hadFailures).toBe(true);
+        expect(log.join('\n')).toContain('Stopped after first failure: 1 suite not run.');
+    });
+
+    test('failFast does not count filtered suites as not run', async () => {
+        const r = await runBenchmarkSuites([suiteFails, suiteAlpha, suiteAlphabet], {
+            failFast: true,
+            suites: ['fails', 'alphabet'],
+        });
+        expect(r.numSuitesRun).toBe(1);
+        expect(log.join('\n')).toContain('Stopped after first failure: 1 suite not run.');
+    });
+
+    test('failFast stops repeating after a failure', async () => {
+        const runFails = vi.spyOn(suiteFails, 'runTests');
+        await runBenchmarkSuites([suiteFails], { failFast: true, repeat: 3 });
+        expect(runFails).toHaveBeenCalledTimes(1);
+        const text = log.join('\n');
+        expect(text).toContain('Stopped after first failure: 2 repeats not run.');
+        expect(text).not.toContain('suites not run');
+    });
+
+    test('failFast changes nothing when no suite fails', async () => {
+        const r = await runBenchmarkSuites([suiteAlpha, suiteAlphabet], { failFast: true, repeat: 2 });
+        expect(r).toEqual({ hadFailures: false, numSuitesRun: 2 });
+        expect(log.join('\n')).not.toContain('Stopped after first failure');
+    });
+
     test('an unknown name is a failure', async () => {
         const r = await runBenchmarkSuites(['alphabet', 'unknown']);
         expect(r).toEqual({ hadFailures: true, numSuitesRun: 1 });

@@ -128,7 +128,31 @@ describe('app', () => {
         const { program } = createProgram();
         await run(genArgv(['--all', '--fail-fast']), program);
         expect(fork).toHaveBeenCalledTimes(1);
+        expect(fork.mock.calls[0][1]).toContain('--fail-fast');
         expect(process.exitCode).toBe(1);
+        expect(logs.join('\n')).toContain('Stopped after first failure: 2 files not run.');
+    });
+
+    test('--fail-fast stops when a runner fails to spawn', async () => {
+        fork.mockImplementation(() => fakeChild({ error: new Error('spawn failed') }));
+        const { program } = createProgram();
+        await run(genArgv(['--all', '--fail-fast']), program);
+        expect(fork).toHaveBeenCalledTimes(1);
+        expect(process.exitCode).toBe(1);
+    });
+
+    test('--fail-fast has nothing to report when the last file fails', async () => {
+        fork.mockImplementation(() => fakeChild({ exitCode: 1 }));
+        const { program } = createProgram();
+        await run(genArgv(['alpha', '--fail-fast']), program);
+        expect(fork).toHaveBeenCalledTimes(1);
+        expect(logs.join('\n')).not.toContain('Stopped after first failure');
+    });
+
+    test('without --fail-fast the runner is not told to stop', async () => {
+        const { program } = createProgram();
+        await run(genArgv(['alpha']), program);
+        expect(fork.mock.calls[0][1]).not.toContain('--fail-fast');
     });
 
     test('a runner that fails to spawn is reported', async () => {

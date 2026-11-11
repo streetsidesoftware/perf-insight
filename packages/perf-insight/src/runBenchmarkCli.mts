@@ -28,6 +28,7 @@ export async function run(args: string[]): Promise<RunResult> {
             test: { type: 'string', short: 'T', multiple: true },
             suite: { type: 'string', short: 'S', multiple: true },
             root: { type: 'string' },
+            'fail-fast': { type: 'boolean' },
         },
     } as const satisfies ParseArgsConfig;
 
@@ -38,6 +39,7 @@ export async function run(args: string[]): Promise<RunResult> {
     const timeout = Number(parsed.values['timeout'] || '0') || undefined;
     const tests = parsed.values['test'];
     const suites = parsed.values['suite'];
+    const failFast = parsed.values['fail-fast'];
 
     const errors: Error[] = [];
 
@@ -64,7 +66,7 @@ export async function run(args: string[]): Promise<RunResult> {
     }
 
     try {
-        const r = await runBenchmarkSuites(undefined, { repeat, timeout, tests, suites });
+        const r = await runBenchmarkSuites(undefined, { repeat, timeout, tests, suites, failFast });
         process.exitCode = process.exitCode || (r.hadFailures ? 1 : 0);
         return { error: errors[0], hadFailures: r.hadFailures };
     } catch (e) {
