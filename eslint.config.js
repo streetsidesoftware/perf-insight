@@ -22,6 +22,13 @@ export default tsEslint.config(
         },
     },
     {
+        rules: {
+            // `util.styleText` is stable from Node 22.13 and 23.5. The `engines` range also covers Node 23.0
+            // to 23.4, where it works but was still marked experimental.
+            'n/no-unsupported-features/node-builtins': ['error', { ignores: ['util.styleText'] }],
+        },
+    },
+    {
         files: ['**/*.{ts,cts,mts,tsx}'],
         rules: {
             // Note: you must disable the base rule as it can report incorrect errors

@@ -20,7 +20,6 @@ describe('perfSuite', () => {
 
     afterEach(() => {
         vi.restoreAllMocks();
-        vi.unstubAllEnvs();
     });
 
     test('suite registers itself as an active suite', () => {
@@ -246,9 +245,6 @@ describe('perfSuite', () => {
     test('uses a spinner when stdout is a TTY', async () => {
         const isTTY = process.stdout.isTTY;
         process.stdout.isTTY = true;
-        // ora only spins in an interactive terminal: not in CI and not with TERM=dumb.
-        vi.stubEnv('CI', undefined);
-        vi.stubEnv('TERM', 'xterm');
         try {
             const r = await runSuite('tty', (test) => {
                 test('ok', () => undefined, shortTimeout);
@@ -266,10 +262,9 @@ describe('perfSuite', () => {
         }
         // The spinner colors its symbols when the terminal supports color.
         const text = stripVTControlCharacters(output.join(''));
-        // Its symbols fall back to √ and × where the terminal lacks Unicode, as on Windows.
-        expect(text).toMatch(/[✔√] ok /);
+        expect(text).toContain('✔ ok ');
         // Plain output marks failures with X instead.
-        expect(text).toMatch(/[✖×] throws: /);
+        expect(text).toContain('✖ throws: ');
         expect(text).not.toContain('X throws');
     });
 });

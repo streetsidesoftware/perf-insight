@@ -69,6 +69,11 @@ describe('formatTable', () => {
         expect(formatTable(['Name'], rows, 5)).toEqual(['Name ', '-----', 'star…', '𝒳'.repeat(4) + '…']);
     });
 
+    test('leaves a column empty when it is squeezed to no width', () => {
+        // Of the 4 columns left after the delimiter, `a` gets floor(1 * 4 / 13) = 0.
+        expect(formatTable(['a', 'Description'], [['x', 'lookup table']], 6)).toEqual(['  De…', '-----', '  lo…']);
+    });
+
     test('returns the header and rule when there are no rows', () => {
         expect(formatTable(header, [])).toEqual(['Suite  Description', '------------------']);
     });
