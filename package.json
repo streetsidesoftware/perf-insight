@@ -1,7 +1,6 @@
 {
   "name": "perf-insight-mono",
   "version": "2.0.1",
-  "description": "Example command line tool.",
   "type": "module",
   "private": true,
   "packageManager": "pnpm@12.18.0",
@@ -32,10 +31,6 @@
     "eslint:fix": "eslint . --fix",
     "app": "perf-insight"
   },
-  "keywords": [
-    "template",
-    "hello"
-  ],
   "author": {
     "name": "Street Side Software",
     "url": "https://github.com/streetsidesoftware"
