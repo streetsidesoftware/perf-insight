@@ -123,8 +123,9 @@ async function runFile(file: string, cliOptions: string[]): Promise<boolean> {
 
 function spawnRunner(args: string[]): Promise<number | undefined> {
     const ac = new AbortController();
-    const timeout = setTimeout(() => ac.abort(), defaultAbortTimeout);
     const process = fork(pathToRunnerCliModule, args, { stdio: 'inherit', signal: ac.signal });
+    // Started only once there is a runner to abort: a timer left pending after `fork` throws keeps this process alive.
+    const timeout = setTimeout(() => ac.abort(), defaultAbortTimeout);
 
     return new Promise((resolve, reject) => {
         let completed = false;

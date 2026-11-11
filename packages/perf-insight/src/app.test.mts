@@ -35,6 +35,7 @@ describe('app', () => {
     afterEach(() => {
         process.chdir(cwd);
         process.exitCode = undefined;
+        vi.useRealTimers();
         vi.restoreAllMocks();
         fork.mockReset();
     });
@@ -163,6 +164,43 @@ describe('app', () => {
         expect(fork.mock.results[0].value.disconnect).toHaveBeenCalled();
         expect(process.exitCode).toBe(1);
     });
+
+    test('a fork that throws is reported and leaves no timer pending', async () => {
+        vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+        fork.mockImplementation(() => {
+            throw new Error('Requires env access');
+        });
+        const { program } = createProgram();
+        await run(genArgv(['alpha']), program);
+        expect(errors.join('\n')).toContain('Failed to spawn runner.');
+        expect(process.exitCode).toBe(1);
+        // A pending timer would keep the process alive after the run has finished.
+        expect(vi.getTimerCount()).toBe(0);
+    });
+
+    test('a runner that never exits is aborted after five minutes', async () => {
+        vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+        const child = fakeChild({ hangs: true });
+        const forked = new Promise<void>((resolve) => {
+            fork.mockImplementation(() => {
+                resolve();
+                return child;
+            });
+        });
+        const { program } = createProgram();
+        const running = run(genArgv(['alpha']), program);
+        await forked;
+        const { signal } = fork.mock.calls[0][2];
+
+        await vi.advanceTimersByTimeAsync(5 * 60 * 1000 - 1);
+        expect(signal.aborted).toBe(false);
+        await vi.advanceTimersByTimeAsync(1);
+        expect(signal.aborted).toBe(true);
+
+        child.emit('exit', null, 'SIGTERM');
+        await running;
+        expect(vi.getTimerCount()).toBe(0);
+    });
 });
 
 function genArgv(args: string | string[]): string[] {
@@ -188,19 +226,22 @@ function createProgram() {
 interface FakeChildOptions {
     exitCode?: number;
     error?: Error;
+    /** The child emits nothing by itself; the test emits `exit`. */
+    hangs?: boolean;
 }
 
 /**
- * Stands in for a forked runner. It emits `error` and/or `exit` on the next tick,
- * after the caller has attached its listeners.
+ * Stands in for a forked runner. Unless it hangs, it emits `error` and/or `exit` on the
+ * next tick, after the caller has attached its listeners.
  */
-function fakeChild({ exitCode, error }: FakeChildOptions) {
+function fakeChild({ exitCode, error, hangs }: FakeChildOptions) {
     const child = Object.assign(new EventEmitter(), {
         connected: true,
         disconnect: vi.fn(() => {
             child.connected = false;
         }),
     });
+    if (hangs) return child;
     setImmediate(() => {
         if (error) child.emit('error', error);
         child.emit('exit', exitCode ?? null, null);
