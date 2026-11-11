@@ -182,8 +182,8 @@ importers:
         specifier: ^10.4.1
         version: 10.4.1
       cspell-trie-lib:
-        specifier: ^9.7.0
-        version: 9.7.0(@cspell/cspell-types@9.7.0)
+        specifier: ^10.4.1
+        version: 10.4.1(@cspell/cspell-types@10.4.1)
       eslint:
         specifier: ^9.39.4
         version: 9.39.4(jiti@2.6.1)(supports-color@9.4.0)
@@ -227,8 +227,8 @@ importers:
   examples:
     dependencies:
       cspell-trie-lib:
-        specifier: ^9.7.0
-        version: 9.7.0(@cspell/cspell-types@9.7.0)
+        specifier: ^10.4.1
+        version: 10.4.1(@cspell/cspell-types@10.4.1)
       lorem-ipsum:
         specifier: ^2.0.8
         version: 2.0.8
@@ -312,10 +312,6 @@ packages:
   '@cspell/cspell-types@10.4.1':
     resolution: {integrity: sha512-FfaRrnrZ3xD09Tq6C49BdAZSx+tLM38Z60vFR/1+qQMQejUOHhv/lQ3UNN4I9z+P3BhmKutcLf8M8IOwlMfOtQ==}
     engines: {node: '>=22.18.0'}
-
-  '@cspell/cspell-types@9.7.0':
-    resolution: {integrity: sha512-Tdfx4eH2uS+gv9V9NCr3Rz+c7RSS6ntXp3Blliud18ibRUlRxO9dTaOjG4iv4x0nAmMeedP1ORkEpeXSkh2QiQ==}
-    engines: {node: '>=20'}
 
   '@cspell/cspell-worker@10.4.1':
     resolution: {integrity: sha512-H6+jTNdXsb5NYRG0g29axVVVS3VHvtXCeggD3p0tRVnBF/SBJZVdsHkQJPFSSAjgMNXPq8S1zhEJzmQECG9G6A==}
@@ -1239,12 +1235,6 @@ packages:
     engines: {node: '>=22.18.0'}
     peerDependencies:
       '@cspell/cspell-types': 10.4.1
-
-  cspell-trie-lib@9.7.0:
-    resolution: {integrity: sha512-a2YqmcraL3g6I/4gY7SYWEZfP73oLluUtxO7wxompk/kOG2K1FUXyQfZXaaR7HxVv10axT1+NrjhOmXpfbI6LA==}
-    engines: {node: '>=20'}
-    peerDependencies:
-      '@cspell/cspell-types': 9.7.0
 
   cspell@10.4.1:
     resolution: {integrity: sha512-/6r9R7Pv78VFuD4uKogu2g6SG+Lms78sLBesgEPR8YJ/VEbEYAz6cbXv86m3FMlqWJdccvnG6WiPNt2Ce8SZAw==}
@@ -2469,8 +2459,6 @@ snapshots:
 
   '@cspell/cspell-types@10.4.1': {}
 
-  '@cspell/cspell-types@9.7.0': {}
-
   '@cspell/cspell-worker@10.4.1':
     dependencies:
       cspell-lib: 10.4.1
@@ -3261,10 +3249,6 @@ snapshots:
   cspell-trie-lib@10.4.1(@cspell/cspell-types@10.4.1):
     dependencies:
       '@cspell/cspell-types': 10.4.1
-
-  cspell-trie-lib@9.7.0(@cspell/cspell-types@9.7.0):
-    dependencies:
-      '@cspell/cspell-types': 9.7.0
 
   cspell@10.4.1:
     dependencies:
