@@ -9,6 +9,12 @@ export default defineConfig({
             exclude: ['**/*.test.*'],
             // CI uploads coverage/lcov.info.
             reporter: ['html', 'text', 'lcov', 'json'],
+            thresholds: {
+                statements: 80,
+                branches: 80,
+                functions: 80,
+                lines: 80,
+            },
         },
     },
 });

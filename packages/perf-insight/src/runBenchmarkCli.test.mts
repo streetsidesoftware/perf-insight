@@ -1,21 +1,71 @@
-import { describe, expect, test } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { run } from './runBenchmarkCli.mjs';
 
+const { register } = vi.hoisted(() => ({ register: vi.fn() }));
+
+vi.mock('module', async (importOriginal) => ({ ...(await importOriginal<typeof import('module')>()), register }));
+
+const root = new URL('../fixtures/', import.meta.url).href;
+
 describe('runBenchmarkCli', () => {
-    test.each`
-        file                         | args                    | root
-        ${'src/exampleMap.perf.mts'} | ${'--suite map -t 500'} | ${'../../../examples/'}
-    `('runBenchmarkCli $file $args', async ({ file, args, root }) => {
-        expect(run).toBeTypeOf('function');
+    let errors: string[];
 
-        args = typeof args === 'string' ? args.split(/\s+/g) : args;
-        const r = new URL(root, import.meta.url).href;
-        const fileUrl = new URL(file, r).href;
-
-        await expect(run([fileUrl, '--root', r, ...args])).resolves.toEqual({
-            error: undefined,
-            hadFailures: true,
+    beforeEach(() => {
+        errors = [];
+        vi.spyOn(console, 'log').mockImplementation(() => undefined);
+        vi.spyOn(console, 'error').mockImplementation((...args) => {
+            errors.push(args.join(' '));
         });
+        vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
+    });
+
+    afterEach(() => {
+        process.exitCode = undefined;
+        vi.restoreAllMocks();
+        register.mockReset();
+    });
+
+    // Suites register globally, so each test selects its own suites with `--suite`.
+    test.each`
+        file               | args                       | hadFailures | exitCode
+        ${'pass.perf.mts'} | ${'--suite fixture-pass'}  | ${false}    | ${0}
+        ${'fail.perf.mts'} | ${'--suite fixture-fail'}  | ${true}     | ${1}
+        ${'pass.perf.mts'} | ${'--suite no-such-suite'} | ${true}     | ${1}
+        ${'pass.perf.mts'} | ${'-S fixture-pass -r 2'}  | ${false}    | ${0}
+        ${'pass.perf.mts'} | ${'-S fixture-pass -t 3'}  | ${false}    | ${0}
+        ${'pass.perf.mts'} | ${'-S fixture-pass -T no'} | ${false}    | ${0}
+    `('run $file $args', async ({ file, args, hadFailures, exitCode }) => {
+        await expect(run([file, '--root', root, ...args.split(' ')])).resolves.toEqual({
+            error: undefined,
+            hadFailures,
+        });
+        expect(process.exitCode).toBe(exitCode);
+    });
+
+    test('a file that fails to import is an error', async () => {
+        const r = await run(['throws-on-import.perf.mts', '--root', root]);
+        expect(r.hadFailures).toBe(true);
+        expect(r.error?.message).toBe('Failed to import file: throws-on-import.perf.mts');
+        expect(r.error?.cause).toEqual(new Error('Import failed.'));
+        expect(errors.join('\n')).toContain('Failed to import file: throws-on-import.perf.mts');
+        expect(process.exitCode).toBe(1);
+    });
+
+    test('files are resolved against the current directory by default', async () => {
+        const r = await run(['fixtures/pass.perf.mts', '--suite', 'fixture-pass']);
+        expect(r).toEqual({ error: undefined, hadFailures: false });
+    });
+
+    test('registers module loaders relative to the root', async () => {
+        await run(['--root', root, '--register', 'loader-a', '--register', 'loader-b', '--suite', 'fixture-pass']);
+        expect(register.mock.calls).toEqual([
+            ['loader-a', new URL(root)],
+            ['loader-b', new URL(root)],
+        ]);
+    });
+
+    test('unknown options are rejected', async () => {
+        await expect(run(['--unknown'])).rejects.toThrow();
     });
 });
