@@ -32,6 +32,7 @@ words:
   - ngram
   - pnpm
   - Positionals
+  - unstub
   - vitest
 ignoreWords: []
 import: []

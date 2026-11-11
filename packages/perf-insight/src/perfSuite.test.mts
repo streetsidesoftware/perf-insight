@@ -1,3 +1,5 @@
+import { stripVTControlCharacters } from 'node:util';
+
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { getActiveSuites, runSuite, suite } from './perfSuite.mjs';
@@ -221,7 +223,8 @@ describe('perfSuite', () => {
         } finally {
             process.stdout.isTTY = isTTY;
         }
-        const text = output.join('');
+        // The spinner colors its symbols when the terminal supports color.
+        const text = stripVTControlCharacters(output.join(''));
         expect(text).toContain('✔ ok');
         // The spinner marks failures with ✖; plain output uses X.
         expect(text).toContain('✖ throws');
