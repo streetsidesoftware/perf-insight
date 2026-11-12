@@ -1,5 +1,30 @@
 # Changelog
 
+## [3.0.0](https://github.com/streetsidesoftware/perf-insight/compare/perf-insight-repo-2.0.1...perf-insight-repo-3.0.0) (2026-11-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove the --register option ([#399](https://github.com/streetsidesoftware/perf-insight/issues/399))
+* drop support for Node 20 ([#374](https://github.com/streetsidesoftware/perf-insight/issues/374))
+
+### Features
+
+* drop support for Node 20 ([#374](https://github.com/streetsidesoftware/perf-insight/issues/374)) ([b5905ad](https://github.com/streetsidesoftware/perf-insight/commit/b5905ad3ef86ba3dbf3e1b678e41c416d3c7025c))
+* remove the --register option ([#399](https://github.com/streetsidesoftware/perf-insight/issues/399)) ([0c4a637](https://github.com/streetsidesoftware/perf-insight/commit/0c4a637f1225da6eae9dc596754f7b0f9439422a))
+* run TypeScript perf files natively, and find `.ts` and `.mts` perf files by default ([c8d4440](https://github.com/streetsidesoftware/perf-insight/commit/c8d444098c4f29c76168bc70d09131a853d53b44))
+* support running perf-insight with Bun and Deno ([#401](https://github.com/streetsidesoftware/perf-insight/issues/401)) ([3b0a147](https://github.com/streetsidesoftware/perf-insight/commit/3b0a147248f8cb62a7cfb4a54488a32cf6595e0a))
+
+
+### Bug Fixes
+
+* exit right away when a perf file's process cannot be started ([#414](https://github.com/streetsidesoftware/perf-insight/issues/414)) ([61e11ec](https://github.com/streetsidesoftware/perf-insight/commit/61e11ecbb30a8d1377512e44bb2dafe29b90d21a))
+* keep result columns aligned for fast tests ([#405](https://github.com/streetsidesoftware/perf-insight/issues/405)) ([c1f2b4b](https://github.com/streetsidesoftware/perf-insight/commit/c1f2b4b1da8466e84f42367cce0e557e4a09a509))
+* make the statistics in runTests() results accurate ([#410](https://github.com/streetsidesoftware/perf-insight/issues/410)) ([5c23dc5](https://github.com/streetsidesoftware/perf-insight/commit/5c23dc59a80a237b7f551fe5dd359d0dbae95fd9))
+* replace chalk with the runtime's built-in text styling ([#409](https://github.com/streetsidesoftware/perf-insight/issues/409)) ([3b40243](https://github.com/streetsidesoftware/perf-insight/commit/3b402435a32b577ebd507d7481829d99cfc65bab))
+* replace ora with a built-in spinner ([#408](https://github.com/streetsidesoftware/perf-insight/issues/408)) ([935ca69](https://github.com/streetsidesoftware/perf-insight/commit/935ca69fa3748cdf06c1a7fa53c0ae706266c183))
+* run every suite after a failure, and make --fail-fast stop at the first failing test ([#402](https://github.com/streetsidesoftware/perf-insight/issues/402)) ([8c83da4](https://github.com/streetsidesoftware/perf-insight/commit/8c83da44f7f5588be330b1fa2510ccb19538b205))
+
 ## [2.0.1](https://github.com/streetsidesoftware/perf-insight/compare/perf-insight-repo-2.0.0...perf-insight-repo-2.0.1) (2025-10-31)
 
 
