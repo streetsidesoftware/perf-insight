@@ -198,6 +198,25 @@ describe('perfSuite', () => {
         expect(output.join('')).not.toContain('Stopped after first failure');
     });
 
+    test('a suite can hold more tests than a function call accepts arguments', async () => {
+        // V8 throws a RangeError at about 125,000 arguments.
+        const testCount = 200_000;
+        const s = suite('many tests', (test) => {
+            for (let i = 0; i < testCount; ++i) {
+                test(
+                    `throws ${i}`,
+                    () => {
+                        throw new Error('boom');
+                    },
+                    shortTimeout,
+                );
+            }
+        });
+        const options: RunTestsOptions = { failFast: true };
+        const r = await s.runTests(options);
+        expect(r.results.map((r) => r.name)).toEqual(['throws 0']);
+    });
+
     test('filter tests by name, ignoring case', async () => {
         const s = suite('filter', (test) => {
             test('Alpha', () => undefined, shortTimeout);

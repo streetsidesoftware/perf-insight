@@ -341,7 +341,6 @@ async function runTests(suite: PerfSuiteImpl, options: RunTestsOptions | undefin
         const runs: number[] = [];
         let iterations = 0;
         const reportInterval = 100;
-        let interval: ReturnType<typeof setInterval> | undefined;
         let error: Error | undefined;
         let iterationCallbacks = 0;
         const sd = createRunningStdDev();
@@ -380,12 +379,8 @@ async function runTests(suite: PerfSuiteImpl, options: RunTestsOptions | undefin
                 }
                 iterations++;
             }
-            clearInterval(interval);
-            interval = undefined;
         } catch (e) {
             error ??= toError(e);
-        } finally {
-            clearInterval(interval);
         }
 
         return {
@@ -433,7 +428,7 @@ async function runTests(suite: PerfSuiteImpl, options: RunTestsOptions | undefin
 
     await suite.suiteFn(createPerfTestFn(context), context);
 
-    nameWidth = Math.max(...tests.map((t) => t.name.length));
+    nameWidth = tests.reduce((width, t) => Math.max(width, t.name.length), 0);
 
     // log(`Running: ${name}:`);
     if (description) {
