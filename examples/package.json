@@ -21,7 +21,7 @@
   "homepage": "https://github.com/streetsidesoftware/perf-insight#readme",
   "license": "MIT",
   "dependencies": {
-    "cspell-trie-lib": "^10.5.1",
+    "cspell-trie-lib": "^10.5.2",
     "lorem-ipsum": "^3.0.0",
     "perf-insight": "workspace:*"
   }
